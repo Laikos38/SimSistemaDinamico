@@ -30,27 +30,27 @@
         {
             this.dgvResults = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.btnSimulate = new System.Windows.Forms.Button();
+            this.txtTo = new System.Windows.Forms.TextBox();
+            this.txtFrom = new System.Windows.Forms.TextBox();
+            this.txtQuantity = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.txtQuantity = new System.Windows.Forms.TextBox();
-            this.txtFrom = new System.Windows.Forms.TextBox();
-            this.txtTo = new System.Windows.Forms.TextBox();
-            this.btnSimulate = new System.Windows.Forms.Button();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.txtFirstPlaneArrival = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.cmbParkedPlanes = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtParkingTime3 = new System.Windows.Forms.TextBox();
+            this.txtParkingTime2 = new System.Windows.Forms.TextBox();
             this.txtParkingTime1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtParkingTime2 = new System.Windows.Forms.TextBox();
-            this.txtParkingTime3 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cmbParkedPlanes = new System.Windows.Forms.ComboBox();
+            this.txtFirstPlaneArrival = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -85,6 +85,47 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parámetros de simulación";
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(181, 126);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.TabIndex = 7;
+            this.btnClear.Text = "Limpiar";
+            this.btnClear.UseVisualStyleBackColor = true;
+            // 
+            // btnSimulate
+            // 
+            this.btnSimulate.Location = new System.Drawing.Point(262, 126);
+            this.btnSimulate.Name = "btnSimulate";
+            this.btnSimulate.Size = new System.Drawing.Size(75, 23);
+            this.btnSimulate.TabIndex = 6;
+            this.btnSimulate.Text = "Simular";
+            this.btnSimulate.UseVisualStyleBackColor = true;
+            this.btnSimulate.Click += new System.EventHandler(this.BtnSimulate_Click);
+            // 
+            // txtTo
+            // 
+            this.txtTo.Enabled = false;
+            this.txtTo.Location = new System.Drawing.Point(129, 92);
+            this.txtTo.Name = "txtTo";
+            this.txtTo.Size = new System.Drawing.Size(100, 20);
+            this.txtTo.TabIndex = 5;
+            // 
+            // txtFrom
+            // 
+            this.txtFrom.Location = new System.Drawing.Point(129, 58);
+            this.txtFrom.Name = "txtFrom";
+            this.txtFrom.Size = new System.Drawing.Size(100, 20);
+            this.txtFrom.TabIndex = 4;
+            // 
+            // txtQuantity
+            // 
+            this.txtQuantity.Location = new System.Drawing.Point(129, 23);
+            this.txtQuantity.Name = "txtQuantity";
+            this.txtQuantity.Size = new System.Drawing.Size(100, 20);
+            this.txtQuantity.TabIndex = 3;
             // 
             // label3
             // 
@@ -135,96 +176,48 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Parámetros dominio";
             // 
-            // groupBox3
+            // label9
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.dgvResults);
-            this.groupBox3.Location = new System.Drawing.Point(12, 178);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(936, 315);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Resultados";
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(372, 107);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(65, 13);
+            this.label9.TabIndex = 20;
+            this.label9.Text = "Aeronave 3:";
             // 
-            // txtQuantity
+            // label8
             // 
-            this.txtQuantity.Location = new System.Drawing.Point(129, 23);
-            this.txtQuantity.Name = "txtQuantity";
-            this.txtQuantity.Size = new System.Drawing.Size(100, 20);
-            this.txtQuantity.TabIndex = 3;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(372, 81);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(65, 13);
+            this.label8.TabIndex = 19;
+            this.label8.Text = "Aeronave 2:";
             // 
-            // txtFrom
+            // label7
             // 
-            this.txtFrom.Location = new System.Drawing.Point(129, 58);
-            this.txtFrom.Name = "txtFrom";
-            this.txtFrom.Size = new System.Drawing.Size(100, 20);
-            this.txtFrom.TabIndex = 4;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(372, 53);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(65, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Aeronave 1:";
             // 
-            // txtTo
+            // txtParkingTime3
             // 
-            this.txtTo.Enabled = false;
-            this.txtTo.Location = new System.Drawing.Point(129, 92);
-            this.txtTo.Name = "txtTo";
-            this.txtTo.Size = new System.Drawing.Size(100, 20);
-            this.txtTo.TabIndex = 5;
+            this.txtParkingTime3.Enabled = false;
+            this.txtParkingTime3.Location = new System.Drawing.Point(448, 104);
+            this.txtParkingTime3.Name = "txtParkingTime3";
+            this.txtParkingTime3.Size = new System.Drawing.Size(76, 20);
+            this.txtParkingTime3.TabIndex = 17;
             // 
-            // btnSimulate
+            // txtParkingTime2
             // 
-            this.btnSimulate.Location = new System.Drawing.Point(262, 126);
-            this.btnSimulate.Name = "btnSimulate";
-            this.btnSimulate.Size = new System.Drawing.Size(75, 23);
-            this.btnSimulate.TabIndex = 6;
-            this.btnSimulate.Text = "Simular";
-            this.btnSimulate.UseVisualStyleBackColor = true;
-            // 
-            // btnClear
-            // 
-            this.btnClear.Location = new System.Drawing.Point(181, 126);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 23);
-            this.btnClear.TabIndex = 7;
-            this.btnClear.Text = "Limpiar";
-            this.btnClear.UseVisualStyleBackColor = true;
-            // 
-            // txtFirstPlaneArrival
-            // 
-            this.txtFirstPlaneArrival.Location = new System.Drawing.Point(162, 38);
-            this.txtFirstPlaneArrival.Name = "txtFirstPlaneArrival";
-            this.txtFirstPlaneArrival.Size = new System.Drawing.Size(121, 20);
-            this.txtFirstPlaneArrival.TabIndex = 9;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(21, 41);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(135, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Llegada próxima aeronave:";
-            // 
-            // cmbParkedPlanes
-            // 
-            this.cmbParkedPlanes.FormattingEnabled = true;
-            this.cmbParkedPlanes.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3"});
-            this.cmbParkedPlanes.Location = new System.Drawing.Point(198, 89);
-            this.cmbParkedPlanes.Name = "cmbParkedPlanes";
-            this.cmbParkedPlanes.Size = new System.Drawing.Size(82, 21);
-            this.cmbParkedPlanes.TabIndex = 12;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(21, 92);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(171, 13);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Cantidad aeronaves estacionadas:";
+            this.txtParkingTime2.Enabled = false;
+            this.txtParkingTime2.Location = new System.Drawing.Point(448, 78);
+            this.txtParkingTime2.Name = "txtParkingTime2";
+            this.txtParkingTime2.Size = new System.Drawing.Size(76, 20);
+            this.txtParkingTime2.TabIndex = 16;
             // 
             // txtParkingTime1
             // 
@@ -244,48 +237,56 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Tiempos de permanencia:";
             // 
-            // txtParkingTime2
+            // label6
             // 
-            this.txtParkingTime2.Enabled = false;
-            this.txtParkingTime2.Location = new System.Drawing.Point(448, 78);
-            this.txtParkingTime2.Name = "txtParkingTime2";
-            this.txtParkingTime2.Size = new System.Drawing.Size(76, 20);
-            this.txtParkingTime2.TabIndex = 16;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(21, 92);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(171, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Cantidad aeronaves estacionadas:";
             // 
-            // txtParkingTime3
+            // cmbParkedPlanes
             // 
-            this.txtParkingTime3.Enabled = false;
-            this.txtParkingTime3.Location = new System.Drawing.Point(448, 104);
-            this.txtParkingTime3.Name = "txtParkingTime3";
-            this.txtParkingTime3.Size = new System.Drawing.Size(76, 20);
-            this.txtParkingTime3.TabIndex = 17;
+            this.cmbParkedPlanes.FormattingEnabled = true;
+            this.cmbParkedPlanes.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.cmbParkedPlanes.Location = new System.Drawing.Point(198, 89);
+            this.cmbParkedPlanes.Name = "cmbParkedPlanes";
+            this.cmbParkedPlanes.Size = new System.Drawing.Size(82, 21);
+            this.cmbParkedPlanes.TabIndex = 12;
             // 
-            // label7
+            // txtFirstPlaneArrival
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(372, 53);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(65, 13);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "Aeronave 1:";
+            this.txtFirstPlaneArrival.Location = new System.Drawing.Point(162, 38);
+            this.txtFirstPlaneArrival.Name = "txtFirstPlaneArrival";
+            this.txtFirstPlaneArrival.Size = new System.Drawing.Size(121, 20);
+            this.txtFirstPlaneArrival.TabIndex = 9;
             // 
-            // label8
+            // label4
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(372, 81);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(65, 13);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "Aeronave 2:";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(21, 41);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(135, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Llegada próxima aeronave:";
             // 
-            // label9
+            // groupBox3
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(372, 107);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(65, 13);
-            this.label9.TabIndex = 20;
-            this.label9.Text = "Aeronave 3:";
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.dgvResults);
+            this.groupBox3.Location = new System.Drawing.Point(12, 178);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(936, 315);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Resultados";
             // 
             // Form1
             // 
