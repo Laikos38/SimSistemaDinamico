@@ -38,9 +38,14 @@ namespace SistemasDinamicos
             StateRow initialize = new StateRow() {
                 clientes = this.getAvionesEstacionados(),
                 tiempoLlegada = proxAvion,
-                pista = new Pista() { libre = true, colaEET = new Queue<Avion>(), colaEEV = new Queue<Avion>() }
+                pista = new Pista() { libre = true, colaEET = new Queue<Avion>(), colaEEV = new Queue<Avion>() },
+                evento = "Inicializacion",
+                reloj = 0
+                };
 
-                                                    };
+            Simulator simulator = new Simulator();
+            simulator.simulate(quantity, from, initialize);
+
            // IList<StateRow> rowsToShow = 
         }
 

@@ -4,44 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimulacionMontecarlo;
+using SistemasDinamicos;
 
 namespace SimulacionMontecarlo
 {
     class Simulator
     {
-        public IList<StateRow> simulate(int quantity, int from, int maxReservations)
+        public IList<StateRow> simulate(int quantity, int from, StateRow initialize)
         {
-            Random random = new Random();
+        /*public double tiempoLlegada { get; set; }
+        public double tiempoAterrizada { get; set; }
+        public double tiempoPermanencia { get; set; }
+        public int tiempoDespegue { get; set; }*/
 
-            IList<StateRow> stateRows = new List<StateRow>();
-            int currentPassengers;
-            long acumProfit = 0;
-            int deniedSeats;
-            int totalProfit;
-            int extraPassengersCost;
+        IList<StateRow> stateRows = new List<StateRow>();
+
+
+            Dictionary<string, double> tiempos = new Dictionary<string, double>();
+            tiempos.Add("tiempoLlegada", initialize.tiempoLlegada);
+            for (int i = 0; i<initialize.clientes.Count; i++)
+            {
+                tiempos.Add("tiempoPermanencia"+(i+1).ToString(), initialize.clientes[i].tiempoPermanencia);
+            }
+
+            KeyValuePair<string, double> tiempoProximoEvento = tiempos.FirstOrDefault(x => x.Value == tiempos.Values.Min());
+
 
             for (int i=0; i<quantity; i++)
             {
-                deniedSeats = 0;
-                totalProfit = 0;
-                extraPassengersCost = 0;
-
-                double rndNumber = random.NextDouble();
-
-                currentPassengers = this.getCurrentPassengers(rndNumber, maxReservations);
-
-                if (currentPassengers > 30)
-                {
-                    deniedSeats = currentPassengers - 30;
-                    extraPassengersCost = deniedSeats * 150;
-                }
-
-                totalProfit = (currentPassengers * 100) - (extraPassengersCost);
-                acumProfit += totalProfit;
-
+               
                 if ((i >= from-1 && i <= from + 99) || i == (quantity - 1))
                 {
-                    StateRow row = new StateRow { currentPassengers = currentPassengers, deniedSeats = deniedSeats, iterationNum = i + 1, extraPassengersCost = extraPassengersCost, rndNumber = Math.Truncate(rndNumber * 10000) / 10000, totalEarnings = currentPassengers * 100, totalProfit = totalProfit, acumProfit = acumProfit};
+                    StateRow row = new StateRow { };
 
                     stateRows.Add(row);
                 }

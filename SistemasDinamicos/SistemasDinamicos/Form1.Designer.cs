@@ -258,6 +258,7 @@
             this.cmbParkedPlanes.Name = "cmbParkedPlanes";
             this.cmbParkedPlanes.Size = new System.Drawing.Size(82, 21);
             this.cmbParkedPlanes.TabIndex = 12;
+            this.cmbParkedPlanes.SelectedIndexChanged += new System.EventHandler(this.cmbParkedPlanes_SelectedIndexChanged);
             // 
             // txtFirstPlaneArrival
             // 

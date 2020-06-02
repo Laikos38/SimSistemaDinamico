@@ -12,5 +12,15 @@ namespace SistemasDinamicos
 
         public double tiempoPermanencia { get; set; }
 
+        public int id { get; set; }
+
+        public static int count { get; set; }
+
+        public Avion()
+        {
+            count += 1;
+            this.id = count;
+        }
+
     }
 }

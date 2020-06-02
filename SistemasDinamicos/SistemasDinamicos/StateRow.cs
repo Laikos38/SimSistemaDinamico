@@ -13,7 +13,7 @@ namespace SimulacionMontecarlo
         public string evento { get; set; }
         public int iterationNum { get; set; }
         public double tiempoLlegada { get; set; }
-        public double tiempoAterrizada { get; set; }
+        public double tiempoAterrizaje { get; set; }
         public double tiempoPermanencia { get; set; }
         public int tiempoDespegue { get; set; }
         public Pista pista { get; set; }
