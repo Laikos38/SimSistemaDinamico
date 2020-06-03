@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GeneradorDeNumerosAleatorios;
 using RandomVarGenerator;
@@ -20,6 +21,8 @@ namespace SimulacionMontecarlo
         public BoxMullerGenerator boxMullerGenerator { get; set; }
         public Generator generator { get; set; }
 
+        
+
         public Simulator()
         {
             uniformGeneratorAterrizaje = new UniformGenerator();
@@ -31,26 +34,38 @@ namespace SimulacionMontecarlo
             convolutionGenerator = new ConvolutionGenerator();
             exponentialGenerator = new ExponentialGenerator();
             exponentialGenerator.lambda = (double) 0.1;
-            boxMullerGenerator = new BoxMullerGenerator();
+            convolutionGenerator.mean = 80;
+            convolutionGenerator.stDeviation = 30;
             generator = new Generator();
         }
 
 
         public IList<StateRow> simulate(int quantity, int from, StateRow anterior)
         {
+            Dictionary<string, double> tiempos = new Dictionary<string, double>();
             IList<StateRow> stateRows = new List<StateRow>();
             StateRow actual = new StateRow();
 
             for (int i=0; i<quantity; i++)
             {
                 // Se arma diccionario con todos los tiempos del vector para determinar el menor, es decir, el siguiente evento
-                Dictionary<string, double> tiempos = new Dictionary<string, double>();
+                tiempos.Clear();
                 if (anterior.tiempoProximaLlegada != 0)
                     tiempos.Add("tiempoProximaLlegada", anterior.tiempoProximaLlegada);
+                for (int j = 0; j < anterior.clientes.Count; j++)
+                {
+                    if (anterior.clientes[j].tiempoFinAterrizaje != 0)
+                        tiempos.Add("tiempoFinAterrizaje_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinAterrizaje);
+                }
+                /*
                 if (anterior.tiempoFinAterrizaje != 0)
                     tiempos.Add("tiempoFinAterrizaje", anterior.tiempoFinAterrizaje);
-                if (anterior.tiempoFinDeDespegue != 0)
-                    tiempos.Add("tiempoFinDeDespegue", anterior.tiempoFinDeDespegue);
+                */
+                for (int j = 0; j < anterior.clientes.Count; j++)
+                {
+                    if (anterior.clientes[j].tiempoFinDeDespegue != 0)
+                        tiempos.Add("tiempoFinDeDespegue_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinDeDespegue);
+                }
                 for (int j = 0; j < anterior.clientes.Count; j++)
                 {
                     if (anterior.clientes[j].tiempoPermanencia != 0)
@@ -73,20 +88,21 @@ namespace SimulacionMontecarlo
                 {
                     case "tiempoProximaLlegada":
                         actual = CrearStateRowLlegadaAvion(anterior, menorTiempo.Value);
-                        actual.iterationNum = i + 1;
                         break;
-                    case "tiempoFinAterrizaje":
-                        actual = CrearStateRowFinAterrizaje(anterior, menorTiempo.Value);
+                    case var val when new Regex(@"tiempoFinAterrizaje_*").IsMatch(val):
+                        int avionFA = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
+                        actual = CrearStateRowFinAterrizaje(anterior, menorTiempo.Value, avionFA);
                         break;
                     case "tiempoFinDeDespegue":
                         actual = CrearStateRowFinDeDespegue(anterior, menorTiempo.Value);
                         break;
-                    default:
+                    case var someVal when new Regex(@"tiempoPermanencia_*").IsMatch(someVal):
                         int avion = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
                         actual = CrearStateRowFinDePermanencia(anterior, menorTiempo.Value, avion);
-                        actual.iterationNum = i + 1;
                         break;
                 }
+
+                actual.iterationNum = i + 1;
 
                 #region Agregar al showed
                 /*
@@ -128,7 +144,7 @@ namespace SimulacionMontecarlo
             nuevo.reloj = tiempoProximoEvento;
 
             // Calcular siguiente tiempo de llegada de prox avion
-            nuevo.rndLlegada = this.generator.NextRnd();
+            nuevo.rndLlegada = this.generator.NextFakeRnd();
             nuevo.tiempoEntreLlegadas = this.exponentialGenerator.Generate(nuevo.rndLlegada);
             nuevo.tiempoProximaLlegada = nuevo.tiempoEntreLlegadas + nuevo.reloj;
 
@@ -144,9 +160,10 @@ namespace SimulacionMontecarlo
             else
             {
                 avionNuevo.estado = "EA";
-                nuevo.rndAterrizaje = this.generator.NextRnd();
+                nuevo.rndAterrizaje = this.generator.NextFakeRnd();
                 nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
+                avionNuevo.tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
                 nuevo.pista.libre = false;
             }
 
@@ -169,9 +186,58 @@ namespace SimulacionMontecarlo
             return new StateRow();
         }
 
-        private StateRow CrearStateRowFinAterrizaje(StateRow anterior, double value)
+        private StateRow CrearStateRowFinAterrizaje(StateRow anterior, double tiempoProximoEvento, int avion)
         {
-            return new StateRow();
+            StateRow nuevo = new StateRow();
+
+            nuevo.evento = "Fin Aterrizaje (" + avion.ToString() + ")" ;
+            nuevo.reloj = tiempoProximoEvento;
+            nuevo.tiempoProximaLlegada = anterior.tiempoProximaLlegada;
+            nuevo.clientes = anterior.clientes;
+
+            //Calcular variables tiempo permanencia
+            /*
+            double ac;
+            nuevo.tiempoDePermanencia = convolutionGenerator.Generate(out ac);
+            nuevo.rndPermanencia = ac;
+            */
+            nuevo.rndPermanencia = generator.NextFakeRnd();
+            nuevo.tiempoDePermanencia = convolutionGenerator.GenerateFake(nuevo.rndPermanencia);
+            nuevo.tiempoFinPermanencia = nuevo.reloj + nuevo.tiempoDePermanencia;
+            nuevo.clientes[avion - 1].tiempoPermanencia = nuevo.tiempoFinPermanencia;
+            nuevo.clientes[avion - 1].tiempoFinAterrizaje = 0;
+            nuevo.clientes[avion - 1].estado = "EP";
+
+            // Calculos variables de pista
+            nuevo.pista = anterior.pista;
+            if( nuevo.pista.colaEEV.Count != 0)
+            {
+                // Calculos variables aterrizaje
+                Avion avionNuevo = nuevo.pista.colaEEV.Dequeue();
+                nuevo.rndAterrizaje = this.generator.NextFakeRnd();
+                nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
+                nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
+                nuevo.pista.libre = false;
+                nuevo.clientes[avionNuevo.id - 1].tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
+                nuevo.clientes[avionNuevo.id - 1].estado = "EA";
+            }
+            else if (nuevo.pista.colaEET.Count != 0)
+            {
+                // Calculos variables de despegue
+                Avion avionNuevo = nuevo.pista.colaEET.Dequeue();
+                nuevo.rndDespegue = this.generator.NextFakeRnd();
+                nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
+                nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
+                nuevo.pista.libre = false;
+                nuevo.clientes[avionNuevo.id - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
+                nuevo.clientes[avionNuevo.id - 1].estado = "ED";
+            }
+            else
+            {
+                nuevo.pista.libre = true;
+            }
+
+            return nuevo;
         }
 
         private StateRow CrearStateRowFinDePermanencia(StateRow anterior, double tiempoProximoEvento, int avion)
@@ -187,6 +253,8 @@ namespace SimulacionMontecarlo
             // Calcular variables de aterrizaje
             nuevo.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
 
+            nuevo.tiempoFinDeDespegue = anterior.tiempoFinDeDespegue;
+
             // Calculos variables de pista
             nuevo.pista = anterior.pista;
             nuevo.clientes = anterior.clientes;
@@ -199,12 +267,13 @@ namespace SimulacionMontecarlo
             {
                 // Calcular variables de despegue
                 nuevo.clientes[avion - 1].estado = "ED";
-                nuevo.rndDespegue = this.generator.NextRnd();
+                nuevo.rndDespegue = this.generator.NextFakeRnd();
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.pista.libre = false;
             }
-            
+            nuevo.clientes[avion - 1].tiempoPermanencia = 0;
+
             return nuevo;
         }
     }

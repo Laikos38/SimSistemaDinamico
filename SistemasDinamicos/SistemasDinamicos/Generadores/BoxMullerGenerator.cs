@@ -14,20 +14,12 @@ namespace RandomVarGenerator
         public double stDeviation { get; set; }
         public double mean { get; set; }
 
-        public double[] Generate()
+        public double Generate(double n1, double n2)
         {
-   
-            double n1 = this.congruentialGenerator.NextRnd();
-            double n2 = this.congruentialGenerator.NextRnd();
 
             double r1 = ((Math.Sqrt(-2 * Math.Log(n1))) * Math.Cos(2 * Math.PI * n2)) * this.stDeviation + this.mean;
-            double r2 = ((Math.Sqrt(-2 * Math.Log(n1))) * Math.Sin(2 * Math.PI * n2)) * this.stDeviation + this.mean;
 
-
-            this.resultPair[0] = r1;
-            this.resultPair[1] = r2;
-
-            return this.resultPair;
+            return r1;
         }
     }
 }
