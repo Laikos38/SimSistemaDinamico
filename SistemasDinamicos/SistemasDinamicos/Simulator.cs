@@ -12,7 +12,9 @@ namespace SimulacionMontecarlo
 {
     class Simulator
     {
-        public UniformGenerator uniformGenerator { get; set; }
+        bool DEBUG = true;
+        public UniformGenerator uniformGeneratorAterrizaje { get; set; }
+        public UniformGenerator uniformGeneratorDespegue { get; set; }
         public ConvolutionGenerator convolutionGenerator { get; set; }
         public ExponentialGenerator exponentialGenerator { get; set; }
         public BoxMullerGenerator boxMullerGenerator { get; set; }
@@ -20,9 +22,12 @@ namespace SimulacionMontecarlo
 
         public Simulator()
         {
-            uniformGenerator = new UniformGenerator();
-            uniformGenerator.a = 3;
-            uniformGenerator.b = 5;
+            uniformGeneratorAterrizaje = new UniformGenerator();
+            uniformGeneratorAterrizaje.a = 3;
+            uniformGeneratorAterrizaje.b = 5;
+            uniformGeneratorDespegue = new UniformGenerator();
+            uniformGeneratorDespegue.a = 2;
+            uniformGeneratorDespegue.b = 4;
             convolutionGenerator = new ConvolutionGenerator();
             exponentialGenerator = new ExponentialGenerator();
             exponentialGenerator.lambda = (double) 0.1;
@@ -79,6 +84,7 @@ namespace SimulacionMontecarlo
                     default:
                         int avion = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
                         actual = CrearStateRowFinDePermanencia(anterior, menorTiempo.Value, avion);
+                        actual.iterationNum = i + 1;
                         break;
                 }
 
@@ -94,6 +100,9 @@ namespace SimulacionMontecarlo
                 #endregion
 
                 anterior = actual;
+
+                // Esto esta aca para propositos de debug
+                stateRows.Add(actual);
             }
 
             return stateRows;
@@ -136,7 +145,7 @@ namespace SimulacionMontecarlo
             {
                 avionNuevo.estado = "EA";
                 nuevo.rndAterrizaje = this.generator.NextRnd();
-                nuevo.tiempoAterrizaje = this.uniformGenerator.Generate(nuevo.rndAterrizaje);
+                nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
                 nuevo.pista.libre = false;
             }
@@ -165,9 +174,38 @@ namespace SimulacionMontecarlo
             return new StateRow();
         }
 
-        private StateRow CrearStateRowFinDePermanencia(StateRow anterior, double value, int avion)
+        private StateRow CrearStateRowFinDePermanencia(StateRow anterior, double tiempoProximoEvento, int avion)
         {
-            return new StateRow();
+            StateRow nuevo = new StateRow();
+
+            nuevo.evento = "Fin permanencia (" + avion.ToString() + ")";
+            nuevo.reloj = tiempoProximoEvento;
+
+            // Calcular siguiente tiempo de llegada de prox avion
+            nuevo.tiempoProximaLlegada = anterior.tiempoProximaLlegada;
+
+            // Calcular variables de aterrizaje
+            nuevo.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
+
+            // Calculos variables de pista
+            nuevo.pista = anterior.pista;
+            nuevo.clientes = anterior.clientes;
+            if (!nuevo.pista.libre)
+            {
+                nuevo.clientes[avion-1].estado = "EET";
+                nuevo.pista.colaEET.Enqueue(nuevo.clientes[avion-1]);
+            }
+            else
+            {
+                // Calcular variables de despegue
+                nuevo.clientes[avion - 1].estado = "ED";
+                nuevo.rndDespegue = this.generator.NextRnd();
+                nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
+                nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
+                nuevo.pista.libre = false;
+            }
+            
+            return nuevo;
         }
     }
 }

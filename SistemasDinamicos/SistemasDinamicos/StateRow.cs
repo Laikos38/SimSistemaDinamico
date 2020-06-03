@@ -23,7 +23,7 @@ namespace SimulacionMontecarlo
         public double tiempoFinPermanencia { get; set; }
         public double rndDespegue { get; set; }
         public double tiempoDeDespegue { get; set; }
-        public int tiempoFinDeDespegue { get; set; }
+        public double tiempoFinDeDespegue { get; set; }
         public Pista pista { get; set; }
         public List<Avion> clientes { get; set; }
     }
