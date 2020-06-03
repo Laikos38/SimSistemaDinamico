@@ -37,7 +37,7 @@ namespace SistemasDinamicos
 
             StateRow initialize = new StateRow() {
                 clientes = this.getAvionesEstacionados(),
-                tiempoLlegada = proxAvion,
+                tiempoProximaLlegada = proxAvion,
                 pista = new Pista() { libre = true, colaEET = new Queue<Avion>(), colaEEV = new Queue<Avion>() },
                 evento = "Inicializacion",
                 reloj = 0

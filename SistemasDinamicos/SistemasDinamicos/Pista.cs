@@ -9,11 +9,8 @@ namespace SistemasDinamicos
 {
     class Pista
     {
-
         public bool libre { get; set; }
         public Queue<Avion> colaEET { get; set; }
         public Queue<Avion> colaEEV { get; set; }
-
-
     }
 }

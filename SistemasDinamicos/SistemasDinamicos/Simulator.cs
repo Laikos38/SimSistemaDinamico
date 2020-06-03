@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeneradorDeNumerosAleatorios;
+using RandomVarGenerator;
 using SimulacionMontecarlo;
 using SistemasDinamicos;
 
@@ -10,18 +12,31 @@ namespace SimulacionMontecarlo
 {
     class Simulator
     {
+        public UniformGenerator uniformGenerator { get; set; }
+        public ConvolutionGenerator convolutionGenerator { get; set; }
+        public ExponentialGenerator exponentialGenerator { get; set; }
+        public BoxMullerGenerator boxMullerGenerator { get; set; }
+        public Generator generator { get; set; }
+
+        public Simulator()
+        {
+            uniformGenerator = new UniformGenerator();
+            uniformGenerator.a = 3;
+            uniformGenerator.b = 5;
+            convolutionGenerator = new ConvolutionGenerator();
+            exponentialGenerator = new ExponentialGenerator();
+            exponentialGenerator.lambda = (double) 0.1;
+            boxMullerGenerator = new BoxMullerGenerator();
+            generator = new Generator();
+        }
+
+
         public IList<StateRow> simulate(int quantity, int from, StateRow initialize)
         {
-        /*public double tiempoLlegada { get; set; }
-        public double tiempoAterrizada { get; set; }
-        public double tiempoPermanencia { get; set; }
-        public int tiempoDespegue { get; set; }*/
-
-        IList<StateRow> stateRows = new List<StateRow>();
-
+            IList<StateRow> stateRows = new List<StateRow>();
 
             Dictionary<string, double> tiempos = new Dictionary<string, double>();
-            tiempos.Add("tiempoLlegada", initialize.tiempoLlegada);
+            tiempos.Add("tiempoLlegada", initialize.tiempoProximaLlegada);
             for (int i = 0; i<initialize.clientes.Count; i++)
             {
                 tiempos.Add("tiempoPermanencia"+(i+1).ToString(), initialize.clientes[i].tiempoPermanencia);
@@ -29,6 +44,14 @@ namespace SimulacionMontecarlo
 
             KeyValuePair<string, double> tiempoProximoEvento = tiempos.FirstOrDefault(x => x.Value == tiempos.Values.Min());
 
+            switch (tiempoProximoEvento.Key)
+            {
+                case "tiempoLlegada":
+                    StateRow actual = CrearStateRowLlegadaAvion(initialize, tiempoProximoEvento.Value);
+                    break;
+                default:
+                    break;
+            }
 
             for (int i=0; i<quantity; i++)
             {
@@ -44,64 +67,54 @@ namespace SimulacionMontecarlo
             return stateRows;
         }
 
-        private int getCurrentPassengers(double rnd, int maxReservations)
+        private StateRow CrearStateRowLlegadaAvion(StateRow anterior, double tiempoProximoEvento)
         {
-            switch (maxReservations)
+            Avion avionNuevo = new Avion();
+            /*
+             *              Solo tener en cuenta cuando la suma de los aviones esperando en tierra y en las colas (o como sea que diga
+             *              la consigna) sea menor a 30.
+             */
+
+            StateRow nuevo = new StateRow();
+
+            nuevo.evento = "Llegada Avion (" + Avion.count.ToString() + ")";
+            nuevo.reloj = tiempoProximoEvento;
+
+            // Calcular siguiente tiempo de llegada de prox avion
+            nuevo.rndLlegada = this.generator.NextRnd();
+            nuevo.tiempoEntreLlegadas = this.exponentialGenerator.Generate(nuevo.rndLlegada);
+            nuevo.tiempoProximaLlegada = nuevo.tiempoEntreLlegadas + nuevo.reloj;
+
+            // Calcular variables de aterrizaje
+            // Calculos variables de pista
+            nuevo.pista = anterior.pista;
+            if (!nuevo.pista.libre)
             {
-                case 31:
-                    //Para el caso de 31 reservaciones máx
-                    if (rnd < 0.10) return 28;
+                avionNuevo.estado = "EEV";
+                nuevo.pista.colaEEV.Enqueue(avionNuevo);
+                nuevo.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
+            }
+            else
+            {
+                avionNuevo.estado = "EA";
+                nuevo.rndAterrizaje = this.generator.NextRnd();
+                nuevo.tiempoAterrizaje = this.uniformGenerator.Generate(nuevo.rndAterrizaje);
+                nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
+                nuevo.pista.libre = false;
+            }
 
-                    if (rnd < 0.35) return 29;
+            // Calcular variables de despegue
+            /*
+             *              CHEQUEAR
+             */
+            nuevo.tiempoFinDeDespegue = anterior.tiempoFinDeDespegue;
 
-                    if (rnd < 0.85) return 30;
-
-                    return 31;
-
-
-                case 32:
-                    //Para el caso de 32 reservaciones máx
-                    if (rnd < 0.05) return 28;
-
-                    if (rnd < 0.3) return 29;
-
-                    if (rnd < 0.8) return 30;
-
-                    if (rnd < 0.95) return 31;
-
-                    return 32;
-
-
-                case 33:
-                    //Para el caso de 33 reservaciones máx
-                    if (rnd < 0.05) return 29;
-
-                    if (rnd < 0.25) return 30;
-
-                    if (rnd < 0.70) return 31;
-
-                    if (rnd < 0.90) return 32;
-
-                    return 33;
-
-
-                case 34:
-                    //Para el caso de 34 reservaciones máx
-                    if (rnd < 0.05) return 29;
-
-                    if (rnd < 0.15) return 30;
-
-                    if (rnd < 0.55) return 31;
-
-                    if (rnd < 0.85) return 32;
-
-                    if (rnd < 0.95) return 33;
-
-                    return 34;
-
-            }   
+            // Clientes
+            nuevo.clientes = anterior.clientes;
+            nuevo.clientes.Add(avionNuevo);
             
-            return 30;
+
+            return nuevo;
         }
     }
 }

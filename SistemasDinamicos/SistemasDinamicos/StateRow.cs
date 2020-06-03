@@ -12,13 +12,19 @@ namespace SimulacionMontecarlo
         public double reloj{ get; set; }
         public string evento { get; set; }
         public int iterationNum { get; set; }
-        public double tiempoLlegada { get; set; }
+        public double rndLlegada { get; set; }
+        public double tiempoEntreLlegadas { get; set; }
+        public double tiempoProximaLlegada { get; set; }
+        public double rndAterrizaje { get; set; }
         public double tiempoAterrizaje { get; set; }
-        public double tiempoPermanencia { get; set; }
-        public int tiempoDespegue { get; set; }
+        public double tiempoFinAterrizaje { get; set; }
+        public double rndPermanencia { get; set; }
+        public double tiempoDePermanencia { get; set; }
+        public double tiempoFinPermanencia { get; set; }
+        public double rndDespegue { get; set; }
+        public double tiempoDeDespegue { get; set; }
+        public int tiempoFinDeDespegue { get; set; }
         public Pista pista { get; set; }
         public List<Avion> clientes { get; set; }
-
-
     }
 }

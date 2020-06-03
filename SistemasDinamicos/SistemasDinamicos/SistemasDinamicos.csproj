@@ -53,6 +53,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generadores\BoxMullerGenerator.cs" />
+    <Compile Include="Generadores\ConvolutionGenerator.cs" />
+    <Compile Include="Generadores\ExponentialGenerator.cs" />
+    <Compile Include="Generadores\Generator.cs" />
+    <Compile Include="Generadores\UniformGenerator.cs" />
     <Compile Include="Pista.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
