@@ -70,11 +70,11 @@ namespace SimulacionMontecarlo
                 KeyValuePair<string, double> menorTiempo = tiemposOrdenados.First();
                 
                 // Controlamos que los aviones en tierra sean menores a 30, si lo son, pasamos al siguiente menor tiempo, es decir, el siguiente evento
-                while (menorTiempo.Key == "tiempoProximaLlegada" && (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + GetCantidadAvionesEnPermanencia(anterior) >= 30))
-                {
-                    tiemposOrdenados.Remove(tiemposOrdenados.First().Key);
-                    menorTiempo = tiemposOrdenados.First();
-                }
+                //if (menorTiempo.Key == "tiempoProximaLlegada" && (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + GetCantidadAvionesEnPermanencia(anterior) >= 30))
+                //{
+                //    tiemposOrdenados.Remove(tiemposOrdenados.First().Key);
+                //    menorTiempo = tiemposOrdenados.First();
+                //}
 
                 // Se crea nuevo staterow segun el evento siguiente determinado
                 switch (menorTiempo.Key)
@@ -98,23 +98,12 @@ namespace SimulacionMontecarlo
 
                 actual.iterationNum = i + 1;
 
-                #region Agregar al showed
-                /*
                 if ((i >= from-1 && i <= from + 99) || i == (quantity - 1))
                 {
-                    StateRow row = new StateRow { };
-
-                    stateRows.Add(row);
+                    stateRows.Add(actual);
                 }
-                */
-                #endregion
 
-                stateRows.Add(actual);
-
-                anterior = actual;
-
-                // Esto esta aca para propositos de debug
-                
+                anterior = actual;                
             }
 
             return stateRows;
@@ -142,7 +131,7 @@ namespace SimulacionMontecarlo
             nuevo.reloj = tiempoProximoEvento;
 
             // Calcular siguiente tiempo de llegada de prox avion
-            nuevo.rndLlegada = this.generator.NextFakeRnd();
+            nuevo.rndLlegada = this.generator.NextRnd();
             nuevo.tiempoEntreLlegadas = this.exponentialGenerator.Generate(nuevo.rndLlegada);
             nuevo.tiempoProximaLlegada = nuevo.tiempoEntreLlegadas + nuevo.reloj;
 
@@ -161,7 +150,7 @@ namespace SimulacionMontecarlo
             else
             {
                 avionNuevo.estado = "EA";
-                nuevo.rndAterrizaje = this.generator.NextFakeRnd();
+                nuevo.rndAterrizaje = this.generator.NextRnd();
                 nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
                 avionNuevo.tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
@@ -284,13 +273,9 @@ namespace SimulacionMontecarlo
             }
 
             //Calcular variables tiempo permanencia
-            /*
-            double ac;
+            double ac = 0;
             nuevo.tiempoDePermanencia = convolutionGenerator.Generate(out ac);
             nuevo.rndPermanencia = ac;
-            */
-            nuevo.rndPermanencia = generator.NextFakeRnd();
-            nuevo.tiempoDePermanencia = convolutionGenerator.GenerateFake(nuevo.rndPermanencia);
             nuevo.tiempoFinPermanencia = nuevo.reloj + nuevo.tiempoDePermanencia;
             nuevo.clientes[avion - 1].tiempoPermanencia = nuevo.tiempoFinPermanencia;
             nuevo.clientes[avion - 1].tiempoFinAterrizaje = 0;
@@ -307,7 +292,7 @@ namespace SimulacionMontecarlo
             {
                 // Calculos variables aterrizaje
                 Avion avionNuevo = nuevo.pista.colaEEV.Dequeue();
-                nuevo.rndAterrizaje = this.generator.NextFakeRnd();
+                nuevo.rndAterrizaje = this.generator.NextRnd();
                 nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
                 nuevo.pista.libre = false;
@@ -318,7 +303,7 @@ namespace SimulacionMontecarlo
             {
                 // Calculos variables de despegue
                 Avion avionNuevo = nuevo.pista.colaEET.Dequeue();
-                nuevo.rndDespegue = this.generator.NextFakeRnd();
+                nuevo.rndDespegue = this.generator.NextRnd();
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.pista.libre = false;
@@ -359,8 +344,22 @@ namespace SimulacionMontecarlo
             nuevo.pista.libre = _anterior.pista.libre;
             nuevo.pista.colaEEV = _anterior.pista.colaEEV;
             nuevo.pista.colaEET = _anterior.pista.colaEET;
+
             nuevo.clientes = new List<Avion>();
-            nuevo.clientes = _anterior.clientes;
+            foreach (Avion avionAnterior in _anterior.clientes)
+            {
+                Avion aux = new Avion()
+                {
+                    estado = avionAnterior.estado,
+                    id = avionAnterior.id,
+                    tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
+                    tiempoPermanencia = avionAnterior.tiempoPermanencia,
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue
+                };
+                nuevo.clientes.Add(aux);
+            }
+
+
             if (!nuevo.pista.libre)
             {
                 nuevo.clientes[avion-1].estado = "EET";
@@ -370,7 +369,7 @@ namespace SimulacionMontecarlo
             {
                 // Calcular variables de despegue
                 nuevo.clientes[avion - 1].estado = "ED";
-                nuevo.rndDespegue = this.generator.NextFakeRnd();
+                nuevo.rndDespegue = this.generator.NextRnd();
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.pista.libre = false;
