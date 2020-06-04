@@ -15,6 +15,8 @@ namespace SistemasDinamicos
         public int id { get; set; }
         public static int count { get; set; }
 
+        public bool disabled { get; set; }
+
         public Avion()
         {
             this.id = count;

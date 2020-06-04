@@ -109,17 +109,23 @@ namespace SistemasDinamicos
 
                 for (int j = 0; j < filasAMostrar[i].clientes.Count; j++)
                 {
-                    if (j > cantClientesAnteriores-1)
+                    if (!filasAMostrar[i].clientes[j].disabled)
                     {
-                        this.dgvResults.ColumnCount += 1;
-                        this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "Estado cliente " + filasAMostrar[i].clientes[j].id.ToString();
-                        this.dgvResults.ColumnCount += 1;
-                        this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "T. permanencia " + filasAMostrar[i].clientes[j].id.ToString();
-                        filasFijas += 2;
+                        if (j > cantClientesAnteriores - 1)
+                        {
+                            this.dgvResults.ColumnCount += 1;
+                            this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "Estado cliente " + filasAMostrar[i].clientes[j].id.ToString();
+                            this.dgvResults.ColumnCount += 1;
+                            this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "T. permanencia " + filasAMostrar[i].clientes[j].id.ToString();
+                            filasFijas += 2;
+                        }
+
+                        dataFila.Add(filasAMostrar[i].clientes[j].estado);
+                        dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[j].tiempoPermanencia));
                     }
 
-                    dataFila.Add(filasAMostrar[i].clientes[j].estado);
-                    dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[j].tiempoPermanencia));
+                    
+
                 }
 
                 cantClientesAnteriores = filasAMostrar[i].clientes.Count;
@@ -179,25 +185,25 @@ namespace SistemasDinamicos
             if (this.cmbParkedPlanes.SelectedIndex == 1)
             {
                 Avion.count += 1;
-                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP" });
+                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP", disabled = false });
                 return result;
             }
             else if (this.cmbParkedPlanes.SelectedIndex == 2)
             {
                 Avion.count += 1;
-                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP" });
+                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP", disabled = false });
                 Avion.count += 1;
-                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime2.Text), estado = "EP" });
+                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime2.Text), estado = "EP", disabled = false });
                 return result;
             }
             else if (this.cmbParkedPlanes.SelectedIndex == 3)
             {
                 Avion.count += 1;
-                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP" });
+                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP", disabled = false });
                 Avion.count += 1;
-                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime2.Text), estado = "EP" });
+                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime2.Text), estado = "EP", disabled = false });
                 Avion.count += 1;
-                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime3.Text), estado = "EP" });
+                result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime3.Text), estado = "EP", disabled = false });
                 return result;
             }
             return result;
