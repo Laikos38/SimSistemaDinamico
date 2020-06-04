@@ -45,8 +45,6 @@ namespace SimulacionMontecarlo
             Dictionary<string, double> tiempos = new Dictionary<string, double>();
             IList<StateRow> stateRows = new List<StateRow>();
 
-            stateRows.Add(anterior);
-
             for (int i=0; i<quantity; i++)
             {
                 StateRow actual = new StateRow();
@@ -100,6 +98,8 @@ namespace SimulacionMontecarlo
 
                 if ((i >= from-1 && i <= from + 99) || i == (quantity - 1))
                 {
+                    if (from == 0 && i == 0) 
+                        stateRows.Add(anterior);
                     stateRows.Add(actual);
                 }
 
@@ -159,6 +159,7 @@ namespace SimulacionMontecarlo
 
             // Calcular variables de despegue
             nuevo.tiempoFinDeDespegue = _anterior.tiempoFinDeDespegue;
+
 
             // Clientes
             nuevo.clientes = new List<Avion>();
@@ -221,7 +222,7 @@ namespace SimulacionMontecarlo
             {
                 // Calculos variables aterrizaje
                 Avion avionNuevo = nuevo.pista.colaEEV.Dequeue();
-                nuevo.rndAterrizaje = this.generator.NextFakeRnd();
+                nuevo.rndAterrizaje = this.generator.NextRnd();
                 nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
                 nuevo.pista.libre = false;
@@ -232,7 +233,7 @@ namespace SimulacionMontecarlo
             {
                 // Calculos variables de despegue
                 Avion avionNuevo = nuevo.pista.colaEET.Dequeue();
-                nuevo.rndDespegue = this.generator.NextFakeRnd();
+                nuevo.rndDespegue = this.generator.NextRnd();
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.pista.libre = false;
@@ -372,6 +373,7 @@ namespace SimulacionMontecarlo
                 nuevo.rndDespegue = this.generator.NextRnd();
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
+                nuevo.clientes[avion - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
                 nuevo.pista.libre = false;
             }
             nuevo.clientes[avion - 1].tiempoPermanencia = 0;

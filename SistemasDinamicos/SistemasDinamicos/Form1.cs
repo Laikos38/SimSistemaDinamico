@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,6 +28,11 @@ namespace SistemasDinamicos
             {
                 return;
             }
+
+            this.dgvResults.Rows.Clear();
+
+
+
 
             int quantity = Convert.ToInt32(this.txtQuantity.Text);
             int from = Convert.ToInt32(this.txtFrom.Text);
@@ -195,6 +201,15 @@ namespace SistemasDinamicos
                 return result;
             }
             return result;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.SuspendLayout();
+            typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic |
+            BindingFlags.Instance | BindingFlags.SetProperty, null,
+            dgvResults, new object[] { true });
+            this.ResumeLayout();
         }
     }
 }

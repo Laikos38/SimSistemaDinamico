@@ -300,6 +300,7 @@
             this.MinimumSize = new System.Drawing.Size(976, 544);
             this.Name = "Form1";
             this.Text = "Simulación Sistemas Dinámicos";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
