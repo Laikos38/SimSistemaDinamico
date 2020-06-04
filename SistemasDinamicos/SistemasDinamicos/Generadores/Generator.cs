@@ -32,8 +32,12 @@ namespace GeneradorDeNumerosAleatorios
             fakeRnds.Enqueue(0.28);
             fakeRnds.Enqueue(0.85);
             fakeRnds.Enqueue(0.2);
-            fakeRnds.Enqueue(0.63);
             fakeRnds.Enqueue(6);
+            fakeRnds.Enqueue(0.63);
+            fakeRnds.Enqueue(0.23);
+            fakeRnds.Enqueue(0.53);
+            fakeRnds.Enqueue(0.93);
+            fakeRnds.Enqueue(0.69);
         }
 
         public List<double> Generate(int quantity)

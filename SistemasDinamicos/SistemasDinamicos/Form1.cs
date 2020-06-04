@@ -48,7 +48,8 @@ namespace SistemasDinamicos
             Simulator simulator = new Simulator();
             IList<StateRow> filasAMostrar = simulator.simulate(quantity, from, initialize);
 
-            int clientCounter = 0;
+            int filasFijas = 18;
+            int cantClientesAnteriores = 0;
             for (int i=0; i < filasAMostrar.Count; i++)
             {
                 string estadoPista = filasAMostrar[i].pista.libre ? "Libre" : "Ocupada";
@@ -79,7 +80,6 @@ namespace SistemasDinamicos
                 }
                 
                 // Manejo de filas
-                //object[] dataFila = new object[] {
                 List<object> dataFila = new List<object>() {
                     diferenteDeCero(filasAMostrar[i].iterationNum),
                     filasAMostrar[i].evento,
@@ -101,22 +101,22 @@ namespace SistemasDinamicos
                     filasAMostrar[i].pista.colaEEVnum
                 };
 
-                for(int j = 0; j < filasAMostrar[i].clientes.Count; j++)
+                for (int j = 0; j < filasAMostrar[i].clientes.Count; j++)
                 {
-                    if ((this.dgvResults.Columns.Count - 18 + clientCounter) != filasAMostrar[i].clientes.Count * 2)
+                    if (j > cantClientesAnteriores-1)
                     {
                         this.dgvResults.ColumnCount += 1;
                         this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "Estado cliente " + filasAMostrar[i].clientes[j].id.ToString();
                         this.dgvResults.ColumnCount += 1;
                         this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "T. permanencia " + filasAMostrar[i].clientes[j].id.ToString();
-                        clientCounter += 2;
+                        filasFijas += 2;
                     }
 
                     dataFila.Add(filasAMostrar[i].clientes[j].estado);
-                    dataFila.Add(filasAMostrar[i].clientes[j].tiempoPermanencia);
-
-
+                    dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[j].tiempoPermanencia));
                 }
+
+                cantClientesAnteriores = filasAMostrar[i].clientes.Count;
 
                 this.dgvResults.Rows.Add(dataFila.ToArray());
             }
@@ -172,19 +172,25 @@ namespace SistemasDinamicos
             }
             if (this.cmbParkedPlanes.SelectedIndex == 1)
             {
+                Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP" });
                 return result;
             }
             else if (this.cmbParkedPlanes.SelectedIndex == 2)
             {
+                Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP" });
+                Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime2.Text), estado = "EP" });
                 return result;
             }
             else if (this.cmbParkedPlanes.SelectedIndex == 3)
             {
+                Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP" });
+                Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime2.Text), estado = "EP" });
+                Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime3.Text), estado = "EP" });
                 return result;
             }
