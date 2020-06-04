@@ -12,5 +12,7 @@ namespace SistemasDinamicos
         public bool libre { get; set; }
         public Queue<Avion> colaEET { get; set; }
         public Queue<Avion> colaEEV { get; set; }
+        public int colaEETnum { get; set; }
+        public int colaEEVnum { get; set; }
     }
 }

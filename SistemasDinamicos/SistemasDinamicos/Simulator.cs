@@ -44,10 +44,13 @@ namespace SimulacionMontecarlo
         {
             Dictionary<string, double> tiempos = new Dictionary<string, double>();
             IList<StateRow> stateRows = new List<StateRow>();
-            StateRow actual = new StateRow();
+
+            stateRows.Add(anterior);
 
             for (int i=0; i<quantity; i++)
             {
+                StateRow actual = new StateRow();
+
                 // Se arma diccionario con todos los tiempos del vector para determinar el menor, es decir, el siguiente evento
                 tiempos.Clear();
                 if (anterior.tiempoProximaLlegada != 0)
@@ -56,18 +59,8 @@ namespace SimulacionMontecarlo
                 {
                     if (anterior.clientes[j].tiempoFinAterrizaje != 0)
                         tiempos.Add("tiempoFinAterrizaje_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinAterrizaje);
-                }
-                /*
-                if (anterior.tiempoFinAterrizaje != 0)
-                    tiempos.Add("tiempoFinAterrizaje", anterior.tiempoFinAterrizaje);
-                */
-                for (int j = 0; j < anterior.clientes.Count; j++)
-                {
                     if (anterior.clientes[j].tiempoFinDeDespegue != 0)
                         tiempos.Add("tiempoFinDeDespegue_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinDeDespegue);
-                }
-                for (int j = 0; j < anterior.clientes.Count; j++)
-                {
                     if (anterior.clientes[j].tiempoPermanencia != 0)
                         tiempos.Add("tiempoPermanencia_" + (j + 1).ToString(), anterior.clientes[j].tiempoPermanencia);
                 }
@@ -115,10 +108,12 @@ namespace SimulacionMontecarlo
                 */
                 #endregion
 
+                stateRows.Add(actual);
+
                 anterior = actual;
 
                 // Esto esta aca para propositos de debug
-                stateRows.Add(actual);
+                
             }
 
             return stateRows;
@@ -139,6 +134,7 @@ namespace SimulacionMontecarlo
         {
             Avion avionNuevo = new Avion();
             StateRow nuevo = new StateRow();
+            StateRow _anterior = anterior;
 
             nuevo.evento = "Llegada Avion (" + Avion.count.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
@@ -150,12 +146,15 @@ namespace SimulacionMontecarlo
 
             // Calcular variables de aterrizaje
             // Calculos variables de pista
-            nuevo.pista = anterior.pista;
+            nuevo.pista = new Pista();
+            nuevo.pista.libre = _anterior.pista.libre;
+            nuevo.pista.colaEEV = _anterior.pista.colaEEV;
+            nuevo.pista.colaEET = _anterior.pista.colaEET;
             if (!nuevo.pista.libre)
             {
                 avionNuevo.estado = "EEV";
                 nuevo.pista.colaEEV.Enqueue(avionNuevo);
-                nuevo.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
+                nuevo.tiempoFinAterrizaje = _anterior.tiempoFinAterrizaje;
             }
             else
             {
@@ -171,12 +170,25 @@ namespace SimulacionMontecarlo
             /*
              *              CHEQUEAR
              */
-            nuevo.tiempoFinDeDespegue = anterior.tiempoFinDeDespegue;
+            nuevo.tiempoFinDeDespegue = _anterior.tiempoFinDeDespegue;
 
             // Clientes
-            nuevo.clientes = anterior.clientes;
+            nuevo.clientes = new List<Avion>();
+            foreach(Avion avionAnterior in _anterior.clientes)
+            {
+                Avion aux = new Avion() {
+                    estado = avionAnterior.estado,
+                    id = avionAnterior.id,
+                    tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
+                    tiempoPermanencia = avionAnterior.tiempoPermanencia,
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue
+                };
+                nuevo.clientes.Add(aux);
+            }
             nuevo.clientes.Add(avionNuevo);
-            
+
+            nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
+            nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
 
             return nuevo;
         }
@@ -189,11 +201,24 @@ namespace SimulacionMontecarlo
         private StateRow CrearStateRowFinAterrizaje(StateRow anterior, double tiempoProximoEvento, int avion)
         {
             StateRow nuevo = new StateRow();
+            StateRow _anterior = anterior;
 
             nuevo.evento = "Fin Aterrizaje (" + avion.ToString() + ")" ;
             nuevo.reloj = tiempoProximoEvento;
-            nuevo.tiempoProximaLlegada = anterior.tiempoProximaLlegada;
-            nuevo.clientes = anterior.clientes;
+            nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
+            nuevo.clientes = new List<Avion>();
+            foreach (Avion avionAnterior in _anterior.clientes)
+            {
+                Avion aux = new Avion()
+                {
+                    estado = avionAnterior.estado,
+                    id = avionAnterior.id,
+                    tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
+                    tiempoPermanencia = avionAnterior.tiempoPermanencia,
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue
+                };
+                nuevo.clientes.Add(aux);
+            }
 
             //Calcular variables tiempo permanencia
             /*
@@ -209,8 +234,13 @@ namespace SimulacionMontecarlo
             nuevo.clientes[avion - 1].estado = "EP";
 
             // Calculos variables de pista
-            nuevo.pista = anterior.pista;
-            if( nuevo.pista.colaEEV.Count != 0)
+            nuevo.pista = new Pista();
+            nuevo.pista.colaEET = new Queue<Avion>();
+            nuevo.pista.colaEEV = new Queue<Avion>();
+            nuevo.pista.libre = _anterior.pista.libre;
+            nuevo.pista.colaEEV = _anterior.pista.colaEEV;
+            nuevo.pista.colaEET = _anterior.pista.colaEET;
+            if ( nuevo.pista.colaEEV.Count != 0)
             {
                 // Calculos variables aterrizaje
                 Avion avionNuevo = nuevo.pista.colaEEV.Dequeue();
@@ -237,27 +267,37 @@ namespace SimulacionMontecarlo
                 nuevo.pista.libre = true;
             }
 
+            nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
+            nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
+
             return nuevo;
         }
 
         private StateRow CrearStateRowFinDePermanencia(StateRow anterior, double tiempoProximoEvento, int avion)
         {
             StateRow nuevo = new StateRow();
+            StateRow _anterior = anterior;
 
             nuevo.evento = "Fin permanencia (" + avion.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
 
             // Calcular siguiente tiempo de llegada de prox avion
-            nuevo.tiempoProximaLlegada = anterior.tiempoProximaLlegada;
+            nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
 
             // Calcular variables de aterrizaje
-            nuevo.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
+            nuevo.tiempoFinAterrizaje = _anterior.tiempoFinAterrizaje;
 
-            nuevo.tiempoFinDeDespegue = anterior.tiempoFinDeDespegue;
+            nuevo.tiempoFinDeDespegue = _anterior.tiempoFinDeDespegue;
 
             // Calculos variables de pista
-            nuevo.pista = anterior.pista;
-            nuevo.clientes = anterior.clientes;
+            nuevo.pista = new Pista();
+            nuevo.pista.colaEET = new Queue<Avion>();
+            nuevo.pista.colaEEV = new Queue<Avion>();
+            nuevo.pista.libre = _anterior.pista.libre;
+            nuevo.pista.colaEEV = _anterior.pista.colaEEV;
+            nuevo.pista.colaEET = _anterior.pista.colaEET;
+            nuevo.clientes = new List<Avion>();
+            nuevo.clientes = _anterior.clientes;
             if (!nuevo.pista.libre)
             {
                 nuevo.clientes[avion-1].estado = "EET";
@@ -273,6 +313,9 @@ namespace SimulacionMontecarlo
                 nuevo.pista.libre = false;
             }
             nuevo.clientes[avion - 1].tiempoPermanencia = 0;
+
+            nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
+            nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
 
             return nuevo;
         }
