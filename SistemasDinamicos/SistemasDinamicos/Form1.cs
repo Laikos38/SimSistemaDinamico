@@ -66,18 +66,40 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[0].HeaderText = "n°";
                     this.dgvResults.Columns[1].HeaderText = "Evento";
                     this.dgvResults.Columns[2].HeaderText = "Reloj";
+
+
                     this.dgvResults.Columns[3].HeaderText = "RND";
                     this.dgvResults.Columns[4].HeaderText = "T. entre llegadas";
                     this.dgvResults.Columns[5].HeaderText = "T. prox. llegada";
+                    this.dgvResults.Columns[3].DefaultCellStyle.BackColor = Color.LightSkyBlue;
+                    this.dgvResults.Columns[4].DefaultCellStyle.BackColor = Color.LightSkyBlue;
+                    this.dgvResults.Columns[5].DefaultCellStyle.BackColor = Color.LightSkyBlue;
+
+
                     this.dgvResults.Columns[6].HeaderText = "RND";
                     this.dgvResults.Columns[7].HeaderText = "T. aterrizaje";
                     this.dgvResults.Columns[8].HeaderText = "T. fin aterrizaje";
+                    this.dgvResults.Columns[6].DefaultCellStyle.BackColor = Color.LightPink;
+                    this.dgvResults.Columns[7].DefaultCellStyle.BackColor = Color.LightPink;
+                    this.dgvResults.Columns[8].DefaultCellStyle.BackColor = Color.LightPink;
+
+
                     this.dgvResults.Columns[9].HeaderText = "SUM RND";
                     this.dgvResults.Columns[10].HeaderText = "T. permanencia";
                     this.dgvResults.Columns[11].HeaderText = "T. fin permanencia";
+                    this.dgvResults.Columns[9].DefaultCellStyle.BackColor = Color.Turquoise;
+                    this.dgvResults.Columns[10].DefaultCellStyle.BackColor = Color.Turquoise;
+                    this.dgvResults.Columns[11].DefaultCellStyle.BackColor = Color.Turquoise;
+
+
                     this.dgvResults.Columns[12].HeaderText = "RND";
                     this.dgvResults.Columns[13].HeaderText = "T. despegue";
                     this.dgvResults.Columns[14].HeaderText = "T. fin despegue";
+                    this.dgvResults.Columns[12].DefaultCellStyle.BackColor = Color.SandyBrown;
+                    this.dgvResults.Columns[13].DefaultCellStyle.BackColor = Color.SandyBrown;
+                    this.dgvResults.Columns[14].DefaultCellStyle.BackColor = Color.SandyBrown;
+
+
                     this.dgvResults.Columns[15].HeaderText = "Estado pista";
                     this.dgvResults.Columns[16].HeaderText = "Cola EET";
                     this.dgvResults.Columns[17].HeaderText = "Cola EEV";
