@@ -271,7 +271,6 @@
             this.cmbParkedPlanes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbParkedPlanes.FormattingEnabled = true;
             this.cmbParkedPlanes.Items.AddRange(new object[] {
-            "0",
             "1",
             "2",
             "3"});
@@ -436,7 +435,7 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.MinimumSize = new System.Drawing.Size(1373, 626);
+            this.MinimumSize = new System.Drawing.Size(1364, 626);
             this.Name = "Form1";
             this.Text = "Alan Britos";
             this.Load += new System.EventHandler(this.Form1_Load);

@@ -238,15 +238,14 @@ namespace SistemasDinamicos
             switch (this.cmbParkedPlanes.SelectedIndex)
             {
                 case 0:
+                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text) || this.txtParkingTime1.Text == "0") return false;
                     break;
                 case 1:
-                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text)) return false;
+                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text) || String.IsNullOrEmpty(this.txtParkingTime2.Text) || this.txtParkingTime1.Text == "0" || this.txtParkingTime2.Text == "0") return false;
+
                     break;
                 case 2:
-                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text) || String.IsNullOrEmpty(this.txtParkingTime2.Text)) return false;
-                    break;
-                case 3:
-                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text) || String.IsNullOrEmpty(this.txtParkingTime2.Text) || String.IsNullOrEmpty(this.txtParkingTime3.Text)) return false;
+                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text) || String.IsNullOrEmpty(this.txtParkingTime2.Text) || String.IsNullOrEmpty(this.txtParkingTime3.Text) || this.txtParkingTime1.Text == "0" || this.txtParkingTime2.Text == "0" || this.txtParkingTime3.Text == "0") return false;
                     break;
             }
 
@@ -257,29 +256,20 @@ namespace SistemasDinamicos
         {
             if (this.cmbParkedPlanes.SelectedIndex == 0)
             {
-                this.txtParkingTime1.Enabled = false;
-                this.txtParkingTime2.Enabled = false;
-                this.txtParkingTime3.Enabled = false;
-                this.txtParkingTime1.Text = "";
-                this.txtParkingTime2.Text = "";
-                this.txtParkingTime3.Text = "";
-            }
-            if (this.cmbParkedPlanes.SelectedIndex == 1)
-            {
                 this.txtParkingTime1.Enabled = true;
                 this.txtParkingTime2.Enabled = false;
                 this.txtParkingTime3.Enabled = false;
                 this.txtParkingTime2.Text = "";
                 this.txtParkingTime3.Text = "";
             }
-            else if (this.cmbParkedPlanes.SelectedIndex == 2)
+            else if (this.cmbParkedPlanes.SelectedIndex == 1)
             {
                 this.txtParkingTime1.Enabled = true;
                 this.txtParkingTime2.Enabled = true;
                 this.txtParkingTime3.Enabled = false;
                 this.txtParkingTime3.Text = "";
             }
-            else if (this.cmbParkedPlanes.SelectedIndex == 3)
+            else if (this.cmbParkedPlanes.SelectedIndex == 2)
             {
                 this.txtParkingTime1.Enabled = true;
                 this.txtParkingTime2.Enabled = true;
@@ -290,17 +280,14 @@ namespace SistemasDinamicos
         private List<Avion> getAvionesEstacionados()
         {
             List<Avion> result = new List<Avion>();
+
             if (this.cmbParkedPlanes.SelectedIndex == 0)
-            {
-                return result;
-            }
-            if (this.cmbParkedPlanes.SelectedIndex == 1)
             {
                 Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP", disabled = false });
                 return result;
             }
-            else if (this.cmbParkedPlanes.SelectedIndex == 2)
+            else if (this.cmbParkedPlanes.SelectedIndex == 1)
             {
                 Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP", disabled = false });
@@ -308,7 +295,7 @@ namespace SistemasDinamicos
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime2.Text), estado = "EP", disabled = false });
                 return result;
             }
-            else if (this.cmbParkedPlanes.SelectedIndex == 3)
+            else if (this.cmbParkedPlanes.SelectedIndex == 2)
             {
                 Avion.count += 1;
                 result.Add(new Avion() { tiempoPermanencia = Convert.ToDouble(this.txtParkingTime1.Text), estado = "EP", disabled = false });
