@@ -32,8 +32,6 @@ namespace SistemasDinamicos
             this.dgvResults.Rows.Clear();
 
 
-
-
             int quantity = Convert.ToInt32(this.txtQuantity.Text);
             int from = Convert.ToInt32(this.txtFrom.Text);
             int to = from + 100;
@@ -63,7 +61,7 @@ namespace SistemasDinamicos
                 // Manejo de columnas
                 if (i==0)
                 {
-                    this.dgvResults.ColumnCount = 18;
+                    this.dgvResults.ColumnCount = 23;
 
                     this.dgvResults.Columns[0].HeaderText = "n°";
                     this.dgvResults.Columns[1].HeaderText = "Evento";
@@ -83,6 +81,12 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[15].HeaderText = "Estado pista";
                     this.dgvResults.Columns[16].HeaderText = "Cola EET";
                     this.dgvResults.Columns[17].HeaderText = "Cola EEV";
+
+                    this.dgvResults.Columns[18].HeaderText = "% aviones sin espera";
+                    this.dgvResults.Columns[19].HeaderText = "Máx. T. EET";
+                    this.dgvResults.Columns[20].HeaderText = "Prom. T. EET";
+                    this.dgvResults.Columns[21].HeaderText = "Máx. T. EEV";
+                    this.dgvResults.Columns[22].HeaderText = "Prom. T. EEV";
                 }
                 
                 // Manejo de filas
@@ -103,8 +107,13 @@ namespace SistemasDinamicos
                     diferenteDeCero(filasAMostrar[i].tiempoDeDespegue),
                     diferenteDeCero(filasAMostrar[i].tiempoFinDeDespegue),
                     estadoPista,
-                    filasAMostrar[i].pista.colaEETnum,
-                    filasAMostrar[i].pista.colaEEVnum
+                    truncar(filasAMostrar[i].pista.colaEETnum),
+                    truncar(filasAMostrar[i].pista.colaEEVnum),
+                    truncar(filasAMostrar[i].porcAvionesAyDInst),
+                    truncar(filasAMostrar[i].maxEETTime),
+                    truncar(filasAMostrar[i].avgEETTime),
+                    truncar(filasAMostrar[i].maxEEVTime),
+                    truncar(filasAMostrar[i].avgEEVTime)
                 };
 
                 for (int j = 0; j < filasAMostrar[i].clientes.Count; j++)
@@ -123,9 +132,6 @@ namespace SistemasDinamicos
                         dataFila.Add(filasAMostrar[i].clientes[j].estado);
                         dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[j].tiempoPermanencia));
                     //}
-
-                    
-
                 }
 
                 cantClientesAnteriores = filasAMostrar[i].clientes.Count;
@@ -140,6 +146,11 @@ namespace SistemasDinamicos
                 return (Math.Truncate(value * 10000) / 10000);
             else
                 return "";
+        }
+
+        private double truncar(double value)
+        {
+            return (Math.Truncate(value * 10000) / 10000);
         }
 
         private bool validateInputs()
