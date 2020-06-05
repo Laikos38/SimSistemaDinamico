@@ -26,6 +26,7 @@ namespace SistemasDinamicos
         {
             if (!validateInputs())
             {
+                MessageBox.Show("Debe completar todos los campos antes de continuar", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -177,6 +178,29 @@ namespace SistemasDinamicos
 
         private bool validateInputs()
         {
+            if (String.IsNullOrEmpty(this.txtFirstPlaneArrival.Text) || String.IsNullOrEmpty(this.txtFrom.Text) || String.IsNullOrEmpty(this.txtQuantity.Text))
+            {
+                return false;
+            }
+
+            if ((Convert.ToInt32(this.txtFirstPlaneArrival.Text) <= 0) || (Convert.ToInt32(this.txtQuantity.Text) <= 0) || (Convert.ToInt32(this.txtFrom.Text) < 0))
+                return false;
+
+            switch (this.cmbParkedPlanes.SelectedIndex)
+            {
+                case 0:
+                    break;
+                case 1:
+                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text)) return false;
+                    break;
+                case 2:
+                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text) || String.IsNullOrEmpty(this.txtParkingTime2.Text)) return false;
+                    break;
+                case 3:
+                    if (String.IsNullOrEmpty(this.txtParkingTime1.Text) || String.IsNullOrEmpty(this.txtParkingTime2.Text) || String.IsNullOrEmpty(this.txtParkingTime3.Text)) return false;
+                    break;
+            }
+
             return true;
         }
 
