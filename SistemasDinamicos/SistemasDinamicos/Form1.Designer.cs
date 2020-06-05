@@ -227,7 +227,7 @@
             this.txtParkingTime3.Name = "txtParkingTime3";
             this.txtParkingTime3.Size = new System.Drawing.Size(76, 20);
             this.txtParkingTime3.TabIndex = 17;
-            this.txtParkingTime3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
+            this.txtParkingTime3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveDecimalNumbers);
             // 
             // txtParkingTime2
             // 
@@ -236,7 +236,7 @@
             this.txtParkingTime2.Name = "txtParkingTime2";
             this.txtParkingTime2.Size = new System.Drawing.Size(76, 20);
             this.txtParkingTime2.TabIndex = 16;
-            this.txtParkingTime2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
+            this.txtParkingTime2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveDecimalNumbers);
             // 
             // txtParkingTime1
             // 
@@ -245,7 +245,7 @@
             this.txtParkingTime1.Name = "txtParkingTime1";
             this.txtParkingTime1.Size = new System.Drawing.Size(76, 20);
             this.txtParkingTime1.TabIndex = 15;
-            this.txtParkingTime1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
+            this.txtParkingTime1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveDecimalNumbers);
             // 
             // label5
             // 
@@ -437,7 +437,7 @@
             this.Controls.Add(this.groupBox1);
             this.MinimumSize = new System.Drawing.Size(1364, 626);
             this.Name = "Form1";
-            this.Text = "Alan Britos";
+            this.Text = "Simulación Dinámica";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.groupBox1.ResumeLayout(false);
