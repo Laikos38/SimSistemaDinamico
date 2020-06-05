@@ -110,6 +110,11 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[20].HeaderText = "Prom. T. EET";
                     this.dgvResults.Columns[21].HeaderText = "Máx. T. EEV";
                     this.dgvResults.Columns[22].HeaderText = "Prom. T. EEV";
+                    this.dgvResults.Columns[18].DefaultCellStyle.BackColor = Color.MediumAquamarine;
+                    this.dgvResults.Columns[19].DefaultCellStyle.BackColor = Color.DarkSalmon;
+                    this.dgvResults.Columns[20].DefaultCellStyle.BackColor = Color.DarkSalmon;
+                    this.dgvResults.Columns[21].DefaultCellStyle.BackColor = Color.LightSteelBlue;
+                    this.dgvResults.Columns[22].DefaultCellStyle.BackColor = Color.LightSteelBlue;
                 }
                 
                 // Manejo de filas
