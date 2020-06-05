@@ -109,8 +109,8 @@ namespace SistemasDinamicos
 
                 for (int j = 0; j < filasAMostrar[i].clientes.Count; j++)
                 {
-                    if (!filasAMostrar[i].clientes[j].disabled)
-                    {
+                    //if (!filasAMostrar[i].clientes[j].disabled)
+                    //{
                         if (j > cantClientesAnteriores - 1)
                         {
                             this.dgvResults.ColumnCount += 1;
@@ -122,7 +122,7 @@ namespace SistemasDinamicos
 
                         dataFila.Add(filasAMostrar[i].clientes[j].estado);
                         dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[j].tiempoPermanencia));
-                    }
+                    //}
 
                     
 
