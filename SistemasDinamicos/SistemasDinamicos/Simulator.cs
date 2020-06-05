@@ -126,12 +126,11 @@ namespace SimulacionMontecarlo
             Avion avionNuevo = new Avion();
             StateRow nuevo = new StateRow();
             StateRow _anterior = anterior;
-
+            nuevo = this.arrastrarVariablesEst(_anterior);
             nuevo.evento = "Llegada Avion (" + Avion.count.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
 
             // Se arrastran variables estadísticas.
-            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
 
             // Calcular siguiente tiempo de llegada de prox avion
             nuevo.rndLlegada = this.generator.NextRnd();
@@ -175,7 +174,11 @@ namespace SimulacionMontecarlo
                     id = avionAnterior.id,
                     tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
                     tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
+
                 };
                 nuevo.clientes.Add(aux);
             }
@@ -196,13 +199,12 @@ namespace SimulacionMontecarlo
         {
             StateRow nuevo = new StateRow();
             StateRow _anterior = anterior;
-
+            nuevo = this.arrastrarVariablesEst(_anterior);
             nuevo.evento = "Fin Despegue (" + avion.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
             nuevo.clientes = new List<Avion>();
             nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
             // Se arrastran variables estadísticas
-            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
 
             foreach (Avion avionAnterior in _anterior.clientes)
             {
@@ -212,7 +214,10 @@ namespace SimulacionMontecarlo
                     id = avionAnterior.id,
                     tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
                     tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
                 };
                 nuevo.clientes.Add(aux);
             }
@@ -282,8 +287,8 @@ namespace SimulacionMontecarlo
 
             // Se recalculan variables estadísticas
             nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(nuevo.clientes.Count)) * 100;
-            nuevo.avgEETTime = Convert.ToDouble(nuevo.acumEETTime) / Convert.ToDouble(nuevo.clientes.Count);
-            nuevo.avgEEVTime = Convert.ToDouble(nuevo.acumEEVTime) / Convert.ToDouble(nuevo.clientes.Count);
+            nuevo.avgEETTime = nuevo.acumEETTime / Convert.ToDouble(nuevo.clientes.Count);
+            nuevo.avgEEVTime = nuevo.acumEEVTime / Convert.ToDouble(nuevo.clientes.Count);
 
             nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
             nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
@@ -295,12 +300,11 @@ namespace SimulacionMontecarlo
         {
             StateRow nuevo = new StateRow();
             StateRow _anterior = anterior;
-
+            nuevo = this.arrastrarVariablesEst(_anterior);
             nuevo.evento = "Fin Aterrizaje (" + avion.ToString() + ")" ;
             nuevo.reloj = tiempoProximoEvento;
             nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
             // Se arrastran variables estadísticas
-            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
 
 
             nuevo.clientes = new List<Avion>();
@@ -312,7 +316,10 @@ namespace SimulacionMontecarlo
                     id = avionAnterior.id,
                     tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
                     tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
                 };
                 nuevo.clientes.Add(aux);
             }
@@ -333,6 +340,7 @@ namespace SimulacionMontecarlo
             nuevo.pista.libre = _anterior.pista.libre;
             nuevo.pista.colaEEV = _anterior.pista.colaEEV;
             nuevo.pista.colaEET = _anterior.pista.colaEET;
+
             if ( nuevo.pista.colaEEV.Count != 0)
             {
                 // Calculos variables aterrizaje
@@ -351,7 +359,7 @@ namespace SimulacionMontecarlo
                     double eevTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEEVin;
                     if (eevTime > nuevo.maxEEVTime) nuevo.maxEEVTime = eevTime;
 
-                    nuevo.acumEEVTime = eevTime;
+                    nuevo.acumEEVTime += eevTime;
                 }
             }
             else if (nuevo.pista.colaEET.Count != 0)
@@ -370,7 +378,7 @@ namespace SimulacionMontecarlo
                     double eetTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEETin;
                     if (eetTime > nuevo.maxEETTime) nuevo.maxEETTime = eetTime;
 
-                    nuevo.acumEETTime = eetTime;
+                    nuevo.acumEETTime += eetTime;
                 }
             }
             else
@@ -393,12 +401,12 @@ namespace SimulacionMontecarlo
         {
             StateRow nuevo = new StateRow();
             StateRow _anterior = anterior;
-
+            nuevo = this.arrastrarVariablesEst(_anterior);
             nuevo.evento = "Fin permanencia (" + avion.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
 
             // Se arrastran variables estadísticas
-            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
+            
 
 
             // Calcular siguiente tiempo de llegada de prox avion
@@ -426,7 +434,10 @@ namespace SimulacionMontecarlo
                     id = avionAnterior.id,
                     tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
                     tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
                 };
                 nuevo.clientes.Add(aux);
             }
@@ -447,12 +458,14 @@ namespace SimulacionMontecarlo
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.clientes[avion - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
                 nuevo.pista.libre = false;
+
                 if (nuevo.clientes[avion - 1].instantLanding) nuevo.cantAvionesAyDInst++;
             }   
             nuevo.clientes[avion - 1].tiempoPermanencia = 0;
 
             // Se recalculan variables estadísticas
             nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(nuevo.clientes.Count)) * 100;
+
             nuevo.avgEETTime = Convert.ToDouble(nuevo.acumEETTime) / Convert.ToDouble(nuevo.clientes.Count);
             nuevo.avgEEVTime = Convert.ToDouble(nuevo.acumEEVTime) / Convert.ToDouble(nuevo.clientes.Count);
        
@@ -462,8 +475,10 @@ namespace SimulacionMontecarlo
             return nuevo;
         }
 
-        private StateRow arrastrarVariablesEst( StateRow nuevo, StateRow _anterior)
+        private StateRow arrastrarVariablesEst(StateRow _anterior)
         {
+            StateRow nuevo = new StateRow();
+
             nuevo.maxEEVTime = _anterior.maxEEVTime;
             nuevo.maxEETTime = _anterior.maxEETTime;
             nuevo.porcAvionesAyDInst = _anterior.porcAvionesAyDInst;
