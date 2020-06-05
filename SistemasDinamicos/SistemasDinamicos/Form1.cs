@@ -41,7 +41,8 @@ namespace SistemasDinamicos
             this.txtTo.Text = to.ToString();
             double proxAvion = Convert.ToDouble(this.txtFirstPlaneArrival.Text);
 
-            StateRow initialize = new StateRow() {
+            StateRow initialize = new StateRow()
+            {
                 clientes = this.getAvionesEstacionados(),
                 tiempoProximaLlegada = proxAvion,
                 pista = new Pista() { libre = true, colaEET = new Queue<Avion>(), colaEEV = new Queue<Avion>() },
@@ -53,21 +54,43 @@ namespace SistemasDinamicos
             Simulator simulator = new Simulator();
             IList<StateRow> filasAMostrar = simulator.simulate(quantity, from, initialize);
 
-            int filasFijas = 18;
-            int cantClientesAnteriores = 0;
-            for (int i=0; i < filasAMostrar.Count; i++)
+            this.txtMaxTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEETTime).ToString();
+            this.txtMaxTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEEVTime).ToString();
+            this.txtAvgTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEETTime).ToString();
+            this.txtAvgTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEEVTime).ToString();
+            this.txtPorcAyDInstant.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].porcAvionesAyDInst).ToString();
+
+            if (to != filasAMostrar.Last().iterationNum)
+                filasAMostrar.Remove(filasAMostrar.Last());
+
+            int columnaInicial = 0;
+            int columnaFinal = 0;
+            for (int a = 0; a < filasAMostrar[0].clientes.Count; a++)
+            {
+                if (!filasAMostrar[0].clientes[a].disabled)
+                {
+                    columnaInicial = filasAMostrar[0].clientes[a].id;
+                    break;
+                    //Console.WriteLine(columnaInicial);
+                }
+            }
+            columnaFinal = filasAMostrar.Last().clientes.Last().id;
+
+            for (int i = 0; i < filasAMostrar.Count; i++)
             {
                 string estadoPista = filasAMostrar[i].pista.libre ? "Libre" : "Ocupada";
 
                 // Manejo de columnas
-                if (i==0)
+                if (i == 0)
                 {
                     this.dgvResults.ColumnCount = 23;
 
                     this.dgvResults.Columns[0].HeaderText = "n°";
                     this.dgvResults.Columns[1].HeaderText = "Evento";
                     this.dgvResults.Columns[2].HeaderText = "Reloj";
-
+                    this.dgvResults.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                     this.dgvResults.Columns[3].HeaderText = "RND";
                     this.dgvResults.Columns[4].HeaderText = "T. entre llegadas";
@@ -75,6 +98,9 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[3].DefaultCellStyle.BackColor = Color.LightSkyBlue;
                     this.dgvResults.Columns[4].DefaultCellStyle.BackColor = Color.LightSkyBlue;
                     this.dgvResults.Columns[5].DefaultCellStyle.BackColor = Color.LightSkyBlue;
+                    this.dgvResults.Columns[3].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[4].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[5].SortMode = DataGridViewColumnSortMode.NotSortable;
 
 
                     this.dgvResults.Columns[6].HeaderText = "RND";
@@ -83,6 +109,9 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[6].DefaultCellStyle.BackColor = Color.LightPink;
                     this.dgvResults.Columns[7].DefaultCellStyle.BackColor = Color.LightPink;
                     this.dgvResults.Columns[8].DefaultCellStyle.BackColor = Color.LightPink;
+                    this.dgvResults.Columns[6].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[7].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[8].SortMode = DataGridViewColumnSortMode.NotSortable;
 
 
                     this.dgvResults.Columns[9].HeaderText = "SUM RND";
@@ -91,6 +120,9 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[9].DefaultCellStyle.BackColor = Color.Turquoise;
                     this.dgvResults.Columns[10].DefaultCellStyle.BackColor = Color.Turquoise;
                     this.dgvResults.Columns[11].DefaultCellStyle.BackColor = Color.Turquoise;
+                    this.dgvResults.Columns[9].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[10].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[11].SortMode = DataGridViewColumnSortMode.NotSortable;
 
 
                     this.dgvResults.Columns[12].HeaderText = "RND";
@@ -99,11 +131,17 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[12].DefaultCellStyle.BackColor = Color.SandyBrown;
                     this.dgvResults.Columns[13].DefaultCellStyle.BackColor = Color.SandyBrown;
                     this.dgvResults.Columns[14].DefaultCellStyle.BackColor = Color.SandyBrown;
+                    this.dgvResults.Columns[12].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[13].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[14].SortMode = DataGridViewColumnSortMode.NotSortable;
 
 
                     this.dgvResults.Columns[15].HeaderText = "Estado pista";
                     this.dgvResults.Columns[16].HeaderText = "Cola EET";
                     this.dgvResults.Columns[17].HeaderText = "Cola EEV";
+                    this.dgvResults.Columns[15].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[16].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[17].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                     this.dgvResults.Columns[18].HeaderText = "% aviones sin espera";
                     this.dgvResults.Columns[19].HeaderText = "Máx. T. EET";
@@ -115,8 +153,26 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[20].DefaultCellStyle.BackColor = Color.DarkSalmon;
                     this.dgvResults.Columns[21].DefaultCellStyle.BackColor = Color.LightSteelBlue;
                     this.dgvResults.Columns[22].DefaultCellStyle.BackColor = Color.LightSteelBlue;
+
+                    this.dgvResults.Columns[18].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[19].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[20].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[21].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[22].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                    this.dgvResults.ColumnCount += ((columnaFinal - columnaInicial) * 2) + 2;
+
+                    int count = columnaInicial;
+                    for (int j = 23; j <= ((columnaFinal - columnaInicial) * 2) + 23; j += 2)
+                    {
+                        this.dgvResults.Columns[j].HeaderText = "Estado cliente " + count.ToString();
+                        this.dgvResults.Columns[j + 1].HeaderText = "T. permanencia " + count.ToString();
+                        this.dgvResults.Columns[j].SortMode = DataGridViewColumnSortMode.NotSortable;
+                        this.dgvResults.Columns[j+1].SortMode = DataGridViewColumnSortMode.NotSortable;
+                        count++;
+                    }
                 }
-                
+
                 // Manejo de filas
                 List<object> dataFila = new List<object>() {
                     diferenteDeCero(filasAMostrar[i].iterationNum),
@@ -144,35 +200,16 @@ namespace SistemasDinamicos
                     truncar(filasAMostrar[i].avgEEVTime)
                 };
 
-                for (int j = 0; j < filasAMostrar[i].clientes.Count; j++)
+                for (int k = columnaInicial - 1; k < (filasAMostrar[i].clientes.Last().id); k++)
                 {
-                    //if (!filasAMostrar[i].clientes[j].disabled)
-                    //{
-                        if (j > cantClientesAnteriores - 1)
-                        {
-                            this.dgvResults.ColumnCount += 1;
-                            this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "Estado cliente " + filasAMostrar[i].clientes[j].id.ToString();
-                            this.dgvResults.ColumnCount += 1;
-                            this.dgvResults.Columns[this.dgvResults.ColumnCount - 1].HeaderText = "T. permanencia " + filasAMostrar[i].clientes[j].id.ToString();
-                            filasFijas += 2;
-                        }
-
-                        dataFila.Add(filasAMostrar[i].clientes[j].estado);
-                        dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[j].tiempoPermanencia));
-                    //}
+                    dataFila.Add(filasAMostrar[i].clientes[k].estado);
+                    dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[k].tiempoPermanencia));
                 }
-
-                cantClientesAnteriores = filasAMostrar[i].clientes.Count;
 
                 this.dgvResults.Rows.Add(dataFila.ToArray());
             }
 
-            this.txtMaxTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEETTime).ToString();
-            this.txtMaxTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEEVTime).ToString();
-            this.txtAvgTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEETTime).ToString();
-            this.txtAvgTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEEVTime).ToString();
-            this.txtPorcAyDInstant.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].porcAvionesAyDInst).ToString();
-
+            this.dgvResults.AllowUserToOrderColumns = false;
         }
 
         private object diferenteDeCero(double value)
@@ -303,6 +340,14 @@ namespace SistemasDinamicos
             this.txtParkingTime3.Text = "";
             this.txtQuantity.Text = "";
             this.txtTo.Text = "";
+        }
+
+        private void AllowPositiveIntegerNumbers(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

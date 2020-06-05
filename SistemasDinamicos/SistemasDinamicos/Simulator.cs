@@ -96,8 +96,7 @@ namespace SimulacionMontecarlo
 
                 actual.iterationNum = i + 1;
 
-                //if ((i >= from-1 && i <= from + 99) || i == (quantity - 1))
-                if (i >= from - 1 && i <= from + 99)
+                if (i >= from - 1 && i <= from + 99 || i == (quantity - 1))
                 {
                     if (from == 0 && i == 0) 
                         stateRows.Add(anterior);
@@ -170,38 +169,19 @@ namespace SimulacionMontecarlo
             nuevo.clientes = new List<Avion>();
             foreach(Avion avionAnterior in _anterior.clientes)
             {
-                if (avionAnterior.estado != "")
+                Avion aux = new Avion()
                 {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = false,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
-                else
-                {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = true,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
+                    estado = avionAnterior.estado,
+                    id = avionAnterior.id,
+                    disabled = avionAnterior.disabled,
+                    tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
+                    tiempoPermanencia = avionAnterior.tiempoPermanencia,
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
+                };
+                nuevo.clientes.Add(aux);
             }
             nuevo.clientes.Add(avionNuevo);
 
@@ -229,44 +209,26 @@ namespace SimulacionMontecarlo
 
             foreach (Avion avionAnterior in _anterior.clientes)
             {
-                if (avionAnterior.estado != "")
+                Avion aux = new Avion()
                 {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = false,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
-                else
-                {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = true,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
+                    estado = avionAnterior.estado,
+                    id = avionAnterior.id,
+                    disabled = avionAnterior.disabled,
+                    tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
+                    tiempoPermanencia = avionAnterior.tiempoPermanencia,
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
+                };
+                nuevo.clientes.Add(aux);
             }
 
             Avion avionDespegado = new Avion();
             avionDespegado = nuevo.clientes[avion - 1];
             nuevo.clientes[avion - 1].tiempoFinDeDespegue = 0;
             nuevo.clientes[avion - 1].estado = "";
+            nuevo.clientes[avion - 1].disabled = true;
 
             // Calculos variables de pista
             nuevo.pista = new Pista();
@@ -351,38 +313,19 @@ namespace SimulacionMontecarlo
             nuevo.clientes = new List<Avion>();
             foreach (Avion avionAnterior in _anterior.clientes)
             {
-                if (avionAnterior.estado != "")
+                Avion aux = new Avion()
                 {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = false,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
-                else
-                {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = true,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
+                    estado = avionAnterior.estado,
+                    id = avionAnterior.id,
+                    disabled = avionAnterior.disabled,
+                    tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
+                    tiempoPermanencia = avionAnterior.tiempoPermanencia,
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
+                };
+                nuevo.clientes.Add(aux);
             }
 
             //Calcular variables tiempo permanencia
@@ -489,38 +432,19 @@ namespace SimulacionMontecarlo
             nuevo.clientes = new List<Avion>();
             foreach (Avion avionAnterior in _anterior.clientes)
             {
-                if (avionAnterior.estado != "")
+                Avion aux = new Avion()
                 {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = false,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
-                else
-                {
-                    Avion aux = new Avion()
-                    {
-                        estado = avionAnterior.estado,
-                        id = avionAnterior.id,
-                        disabled = true,
-                        tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
-                        tiempoPermanencia = avionAnterior.tiempoPermanencia,
-                        tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
-                        tiempoEETin = avionAnterior.tiempoEETin,
-                        tiempoEEVin = avionAnterior.tiempoEEVin,
-                        instantLanding = avionAnterior.instantLanding
-                    };
-                    nuevo.clientes.Add(aux);
-                }
+                    estado = avionAnterior.estado,
+                    id = avionAnterior.id,
+                    disabled = avionAnterior.disabled,
+                    tiempoFinAterrizaje = avionAnterior.tiempoFinAterrizaje,
+                    tiempoPermanencia = avionAnterior.tiempoPermanencia,
+                    tiempoFinDeDespegue = avionAnterior.tiempoFinDeDespegue,
+                    tiempoEETin = avionAnterior.tiempoEETin,
+                    tiempoEEVin = avionAnterior.tiempoEEVin,
+                    instantLanding = avionAnterior.instantLanding
+                };
+                nuevo.clientes.Add(aux);
             }
 
 

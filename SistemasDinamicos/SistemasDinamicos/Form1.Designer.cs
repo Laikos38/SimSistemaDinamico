@@ -71,12 +71,16 @@
             // 
             // dgvResults
             // 
+            this.dgvResults.AllowUserToAddRows = false;
             this.dgvResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvResults.Location = new System.Drawing.Point(6, 19);
+            this.dgvResults.MultiSelect = false;
             this.dgvResults.Name = "dgvResults";
+            this.dgvResults.ReadOnly = true;
+            this.dgvResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvResults.Size = new System.Drawing.Size(1321, 372);
             this.dgvResults.TabIndex = 0;
             // 
@@ -132,6 +136,7 @@
             this.txtFrom.Name = "txtFrom";
             this.txtFrom.Size = new System.Drawing.Size(100, 20);
             this.txtFrom.TabIndex = 4;
+            this.txtFrom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
             // 
             // txtQuantity
             // 
@@ -139,6 +144,7 @@
             this.txtQuantity.Name = "txtQuantity";
             this.txtQuantity.Size = new System.Drawing.Size(100, 20);
             this.txtQuantity.TabIndex = 3;
+            this.txtQuantity.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
             // 
             // label3
             // 
@@ -169,8 +175,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label7);
@@ -223,6 +227,7 @@
             this.txtParkingTime3.Name = "txtParkingTime3";
             this.txtParkingTime3.Size = new System.Drawing.Size(76, 20);
             this.txtParkingTime3.TabIndex = 17;
+            this.txtParkingTime3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
             // 
             // txtParkingTime2
             // 
@@ -231,6 +236,7 @@
             this.txtParkingTime2.Name = "txtParkingTime2";
             this.txtParkingTime2.Size = new System.Drawing.Size(76, 20);
             this.txtParkingTime2.TabIndex = 16;
+            this.txtParkingTime2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
             // 
             // txtParkingTime1
             // 
@@ -239,6 +245,7 @@
             this.txtParkingTime1.Name = "txtParkingTime1";
             this.txtParkingTime1.Size = new System.Drawing.Size(76, 20);
             this.txtParkingTime1.TabIndex = 15;
+            this.txtParkingTime1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
             // 
             // label5
             // 
@@ -280,6 +287,7 @@
             this.txtFirstPlaneArrival.Name = "txtFirstPlaneArrival";
             this.txtFirstPlaneArrival.Size = new System.Drawing.Size(121, 20);
             this.txtFirstPlaneArrival.TabIndex = 9;
+            this.txtFirstPlaneArrival.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AllowPositiveIntegerNumbers);
             // 
             // label4
             // 
@@ -305,7 +313,8 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.label14);
             this.groupBox4.Controls.Add(this.label13);
             this.groupBox4.Controls.Add(this.label12);
@@ -325,6 +334,7 @@
             // 
             // label14
             // 
+            this.label14.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(94, 111);
             this.label14.Name = "label14";
@@ -334,6 +344,7 @@
             // 
             // label13
             // 
+            this.label13.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(213, 66);
             this.label13.Name = "label13";
@@ -343,6 +354,7 @@
             // 
             // label12
             // 
+            this.label12.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(16, 66);
             this.label12.Name = "label12";
@@ -352,6 +364,7 @@
             // 
             // label11
             // 
+            this.label11.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(213, 22);
             this.label11.Name = "label11";
@@ -361,6 +374,7 @@
             // 
             // label10
             // 
+            this.label10.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(16, 22);
             this.label10.Name = "label10";
@@ -370,6 +384,7 @@
             // 
             // txtPorcAyDInstant
             // 
+            this.txtPorcAyDInstant.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtPorcAyDInstant.Enabled = false;
             this.txtPorcAyDInstant.Location = new System.Drawing.Point(120, 129);
             this.txtPorcAyDInstant.Name = "txtPorcAyDInstant";
@@ -378,6 +393,7 @@
             // 
             // txtMaxTimeEEV
             // 
+            this.txtMaxTimeEEV.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtMaxTimeEEV.Enabled = false;
             this.txtMaxTimeEEV.Location = new System.Drawing.Point(216, 41);
             this.txtMaxTimeEEV.Name = "txtMaxTimeEEV";
@@ -386,6 +402,7 @@
             // 
             // txtAvgTimeEEV
             // 
+            this.txtAvgTimeEEV.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtAvgTimeEEV.Enabled = false;
             this.txtAvgTimeEEV.Location = new System.Drawing.Point(216, 85);
             this.txtAvgTimeEEV.Name = "txtAvgTimeEEV";
@@ -394,6 +411,7 @@
             // 
             // txtAvgTimeEET
             // 
+            this.txtAvgTimeEET.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtAvgTimeEET.Enabled = false;
             this.txtAvgTimeEET.Location = new System.Drawing.Point(19, 84);
             this.txtAvgTimeEET.Name = "txtAvgTimeEET";
@@ -402,6 +420,7 @@
             // 
             // txtMaxTimeEET
             // 
+            this.txtMaxTimeEET.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtMaxTimeEET.Enabled = false;
             this.txtMaxTimeEET.Location = new System.Drawing.Point(19, 40);
             this.txtMaxTimeEET.Name = "txtMaxTimeEET";
@@ -419,7 +438,7 @@
             this.Controls.Add(this.groupBox1);
             this.MinimumSize = new System.Drawing.Size(1373, 626);
             this.Name = "Form1";
-            this.Text = "Simulación Sistemas Dinámicos";
+            this.Text = "Alan Britos";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.groupBox1.ResumeLayout(false);
