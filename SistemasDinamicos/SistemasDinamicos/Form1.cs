@@ -30,7 +30,7 @@ namespace SistemasDinamicos
             }
 
             this.dgvResults.Rows.Clear();
-
+            Avion.count = 0;
 
             int quantity = Convert.ToInt32(this.txtQuantity.Text);
             int from = Convert.ToInt32(this.txtFrom.Text);
