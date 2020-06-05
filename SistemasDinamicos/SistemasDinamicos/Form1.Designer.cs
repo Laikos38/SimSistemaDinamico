@@ -52,16 +52,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.txtPorcAyDInstant = new System.Windows.Forms.TextBox();
             this.txtMaxTimeEEV = new System.Windows.Forms.TextBox();
             this.txtAvgTimeEEV = new System.Windows.Forms.TextBox();
             this.txtAvgTimeEET = new System.Windows.Forms.TextBox();
             this.txtMaxTimeEET = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -323,63 +323,23 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Estadísticas";
             // 
-            // label10
+            // label14
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(16, 29);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(171, 13);
-            this.label10.TabIndex = 5;
-            this.label10.Text = "Tiempo de espera máximo en tierra";
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(94, 111);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(239, 13);
+            this.label14.TabIndex = 9;
+            this.label14.Text = "Porcentaje de aterrizajes y despegues inmediatos";
             // 
-            // txtPorcAyDInstant
+            // label13
             // 
-            this.txtPorcAyDInstant.Enabled = false;
-            this.txtPorcAyDInstant.Location = new System.Drawing.Point(120, 123);
-            this.txtPorcAyDInstant.Name = "txtPorcAyDInstant";
-            this.txtPorcAyDInstant.Size = new System.Drawing.Size(168, 20);
-            this.txtPorcAyDInstant.TabIndex = 4;
-            // 
-            // txtMaxTimeEEV
-            // 
-            this.txtMaxTimeEEV.Enabled = false;
-            this.txtMaxTimeEEV.Location = new System.Drawing.Point(216, 42);
-            this.txtMaxTimeEEV.Name = "txtMaxTimeEEV";
-            this.txtMaxTimeEEV.Size = new System.Drawing.Size(171, 20);
-            this.txtMaxTimeEEV.TabIndex = 1;
-            // 
-            // txtAvgTimeEEV
-            // 
-            this.txtAvgTimeEEV.Enabled = false;
-            this.txtAvgTimeEEV.Location = new System.Drawing.Point(216, 81);
-            this.txtAvgTimeEEV.Name = "txtAvgTimeEEV";
-            this.txtAvgTimeEEV.Size = new System.Drawing.Size(171, 20);
-            this.txtAvgTimeEEV.TabIndex = 3;
-            // 
-            // txtAvgTimeEET
-            // 
-            this.txtAvgTimeEET.Enabled = false;
-            this.txtAvgTimeEET.Location = new System.Drawing.Point(19, 81);
-            this.txtAvgTimeEET.Name = "txtAvgTimeEET";
-            this.txtAvgTimeEET.Size = new System.Drawing.Size(168, 20);
-            this.txtAvgTimeEET.TabIndex = 2;
-            // 
-            // txtMaxTimeEET
-            // 
-            this.txtMaxTimeEET.Enabled = false;
-            this.txtMaxTimeEET.Location = new System.Drawing.Point(19, 43);
-            this.txtMaxTimeEET.Name = "txtMaxTimeEET";
-            this.txtMaxTimeEET.Size = new System.Drawing.Size(168, 20);
-            this.txtMaxTimeEET.TabIndex = 0;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(213, 29);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(174, 13);
-            this.label11.TabIndex = 6;
-            this.label11.Text = "Tiempo de espera máximo en vuelo";
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(213, 66);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(182, 13);
+            this.label13.TabIndex = 8;
+            this.label13.Text = "Tiempo de espera promedio en vuelo";
             // 
             // label12
             // 
@@ -390,23 +350,63 @@
             this.label12.TabIndex = 7;
             this.label12.Text = "Tiempo de espera promedio en tierra";
             // 
-            // label13
+            // label11
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(213, 65);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(182, 13);
-            this.label13.TabIndex = 8;
-            this.label13.Text = "Tiempo de espera promedio en vuelo";
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(213, 22);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(174, 13);
+            this.label11.TabIndex = 6;
+            this.label11.Text = "Tiempo de espera máximo en vuelo";
             // 
-            // label14
+            // label10
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(94, 107);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(239, 13);
-            this.label14.TabIndex = 9;
-            this.label14.Text = "Porcentaje de aterrizajes y despegues inmediatos";
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(16, 22);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(171, 13);
+            this.label10.TabIndex = 5;
+            this.label10.Text = "Tiempo de espera máximo en tierra";
+            // 
+            // txtPorcAyDInstant
+            // 
+            this.txtPorcAyDInstant.Enabled = false;
+            this.txtPorcAyDInstant.Location = new System.Drawing.Point(120, 129);
+            this.txtPorcAyDInstant.Name = "txtPorcAyDInstant";
+            this.txtPorcAyDInstant.Size = new System.Drawing.Size(168, 20);
+            this.txtPorcAyDInstant.TabIndex = 4;
+            // 
+            // txtMaxTimeEEV
+            // 
+            this.txtMaxTimeEEV.Enabled = false;
+            this.txtMaxTimeEEV.Location = new System.Drawing.Point(216, 41);
+            this.txtMaxTimeEEV.Name = "txtMaxTimeEEV";
+            this.txtMaxTimeEEV.Size = new System.Drawing.Size(171, 20);
+            this.txtMaxTimeEEV.TabIndex = 1;
+            // 
+            // txtAvgTimeEEV
+            // 
+            this.txtAvgTimeEEV.Enabled = false;
+            this.txtAvgTimeEEV.Location = new System.Drawing.Point(216, 85);
+            this.txtAvgTimeEEV.Name = "txtAvgTimeEEV";
+            this.txtAvgTimeEEV.Size = new System.Drawing.Size(171, 20);
+            this.txtAvgTimeEEV.TabIndex = 3;
+            // 
+            // txtAvgTimeEET
+            // 
+            this.txtAvgTimeEET.Enabled = false;
+            this.txtAvgTimeEET.Location = new System.Drawing.Point(19, 84);
+            this.txtAvgTimeEET.Name = "txtAvgTimeEET";
+            this.txtAvgTimeEET.Size = new System.Drawing.Size(168, 20);
+            this.txtAvgTimeEET.TabIndex = 2;
+            // 
+            // txtMaxTimeEET
+            // 
+            this.txtMaxTimeEET.Enabled = false;
+            this.txtMaxTimeEET.Location = new System.Drawing.Point(19, 40);
+            this.txtMaxTimeEET.Name = "txtMaxTimeEET";
+            this.txtMaxTimeEET.Size = new System.Drawing.Size(168, 20);
+            this.txtMaxTimeEET.TabIndex = 0;
             // 
             // Form1
             // 
