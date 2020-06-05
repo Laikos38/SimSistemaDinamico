@@ -130,6 +130,9 @@ namespace SimulacionMontecarlo
             nuevo.evento = "Llegada Avion (" + Avion.count.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
 
+            // Se arrastran variables estadísticas.
+            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
+
             // Calcular siguiente tiempo de llegada de prox avion
             nuevo.rndLlegada = this.generator.NextRnd();
             nuevo.tiempoEntreLlegadas = this.exponentialGenerator.Generate(nuevo.rndLlegada);
@@ -146,6 +149,7 @@ namespace SimulacionMontecarlo
                 avionNuevo.estado = "EEV";
                 nuevo.pista.colaEEV.Enqueue(avionNuevo);
                 nuevo.tiempoFinAterrizaje = _anterior.tiempoFinAterrizaje;
+                avionNuevo.tiempoEEVin = nuevo.reloj;
             }
             else
             {
@@ -155,6 +159,7 @@ namespace SimulacionMontecarlo
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
                 avionNuevo.tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
                 nuevo.pista.libre = false;
+                avionNuevo.instantLanding = true;
             }
 
             // Calcular variables de despegue
@@ -176,6 +181,11 @@ namespace SimulacionMontecarlo
             }
             nuevo.clientes.Add(avionNuevo);
 
+            // Se recalculan variables estadísticas
+            nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(nuevo.clientes.Count)) * 100;
+            nuevo.avgEETTime = Convert.ToDouble(nuevo.acumEETTime) / Convert.ToDouble(nuevo.clientes.Count);
+            nuevo.avgEEVTime = Convert.ToDouble(nuevo.acumEEVTime) / Convert.ToDouble(nuevo.clientes.Count);
+
             nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
             nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
 
@@ -191,6 +201,8 @@ namespace SimulacionMontecarlo
             nuevo.reloj = tiempoProximoEvento;
             nuevo.clientes = new List<Avion>();
             nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
+            // Se arrastran variables estadísticas
+            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
 
             foreach (Avion avionAnterior in _anterior.clientes)
             {
@@ -228,6 +240,19 @@ namespace SimulacionMontecarlo
                 nuevo.pista.libre = false;
                 nuevo.clientes[avionNuevo.id - 1].tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
                 nuevo.clientes[avionNuevo.id - 1].estado = "EA";
+
+
+                // Se chequea si el tiempo de espera en cola del avión desencolado es mayor al máx registrado,
+                // de ser así lo asigna como maxEEVTime.
+                // Puede que el chequeo no sea necesario
+                if (nuevo.clientes[avionNuevo.id - 1].tiempoEEVin != 0)
+                {
+                    double eevTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEEVin;
+                    if (eevTime > nuevo.maxEEVTime) nuevo.maxEEVTime = eevTime;
+
+                    nuevo.acumEEVTime += eevTime;
+
+                }
             }
             else if (nuevo.pista.colaEET.Count != 0)
             {
@@ -239,11 +264,26 @@ namespace SimulacionMontecarlo
                 nuevo.pista.libre = false;
                 nuevo.clientes[avionNuevo.id - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
                 nuevo.clientes[avionNuevo.id - 1].estado = "ED";
+
+
+                // Idem cola en vuelo
+                if (nuevo.clientes[avionNuevo.id - 1].tiempoEETin != 0)
+                {
+                    double eetTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEETin;
+                    if (eetTime > nuevo.maxEETTime) nuevo.maxEETTime = eetTime;
+
+                    nuevo.acumEETTime += eetTime;
+                }
             }
             else
             {
                 nuevo.pista.libre = true;
             }
+
+            // Se recalculan variables estadísticas
+            nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(nuevo.clientes.Count)) * 100;
+            nuevo.avgEETTime = Convert.ToDouble(nuevo.acumEETTime) / Convert.ToDouble(nuevo.clientes.Count);
+            nuevo.avgEEVTime = Convert.ToDouble(nuevo.acumEEVTime) / Convert.ToDouble(nuevo.clientes.Count);
 
             nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
             nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
@@ -259,6 +299,10 @@ namespace SimulacionMontecarlo
             nuevo.evento = "Fin Aterrizaje (" + avion.ToString() + ")" ;
             nuevo.reloj = tiempoProximoEvento;
             nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
+            // Se arrastran variables estadísticas
+            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
+
+
             nuevo.clientes = new List<Avion>();
             foreach (Avion avionAnterior in _anterior.clientes)
             {
@@ -299,6 +343,16 @@ namespace SimulacionMontecarlo
                 nuevo.pista.libre = false;
                 nuevo.clientes[avionNuevo.id - 1].tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
                 nuevo.clientes[avionNuevo.id - 1].estado = "EA";
+
+                // Se chequea si el tiempo de espera en cola del avión desencolado es mayor al máx registrado,
+                // de ser así lo asigna como maxEEVTime.
+                if(nuevo.clientes[avionNuevo.id - 1].tiempoEEVin != 0)
+                {
+                    double eevTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEEVin;
+                    if (eevTime > nuevo.maxEEVTime) nuevo.maxEEVTime = eevTime;
+
+                    nuevo.acumEEVTime = eevTime;
+                }
             }
             else if (nuevo.pista.colaEET.Count != 0)
             {
@@ -310,11 +364,24 @@ namespace SimulacionMontecarlo
                 nuevo.pista.libre = false;
                 nuevo.clientes[avionNuevo.id - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
                 nuevo.clientes[avionNuevo.id - 1].estado = "ED";
+
+                if (nuevo.clientes[avionNuevo.id - 1].tiempoEETin != 0)
+                {
+                    double eetTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEETin;
+                    if (eetTime > nuevo.maxEETTime) nuevo.maxEETTime = eetTime;
+
+                    nuevo.acumEETTime = eetTime;
+                }
             }
             else
             {
                 nuevo.pista.libre = true;
             }
+
+            // Se recalculan variables estadísticas
+            nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(nuevo.clientes.Count)) * 100;
+            nuevo.avgEETTime = Convert.ToDouble(nuevo.acumEETTime) / Convert.ToDouble(nuevo.clientes.Count);
+            nuevo.avgEEVTime = Convert.ToDouble(nuevo.acumEEVTime) / Convert.ToDouble(nuevo.clientes.Count);
 
             nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
             nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
@@ -329,6 +396,10 @@ namespace SimulacionMontecarlo
 
             nuevo.evento = "Fin permanencia (" + avion.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
+
+            // Se arrastran variables estadísticas
+            nuevo = this.arrastrarVariablesEst(nuevo, _anterior);
+
 
             // Calcular siguiente tiempo de llegada de prox avion
             nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
@@ -365,6 +436,7 @@ namespace SimulacionMontecarlo
             {
                 nuevo.clientes[avion-1].estado = "EET";
                 nuevo.pista.colaEET.Enqueue(nuevo.clientes[avion-1]);
+                nuevo.clientes[avion - 1].tiempoEETin = nuevo.reloj;
             }
             else
             {
@@ -375,13 +447,34 @@ namespace SimulacionMontecarlo
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.clientes[avion - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
                 nuevo.pista.libre = false;
-            }
+                if (nuevo.clientes[avion - 1].instantLanding) nuevo.cantAvionesAyDInst++;
+            }   
             nuevo.clientes[avion - 1].tiempoPermanencia = 0;
 
+            // Se recalculan variables estadísticas
+            nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(nuevo.clientes.Count)) * 100;
+            nuevo.avgEETTime = Convert.ToDouble(nuevo.acumEETTime) / Convert.ToDouble(nuevo.clientes.Count);
+            nuevo.avgEEVTime = Convert.ToDouble(nuevo.acumEEVTime) / Convert.ToDouble(nuevo.clientes.Count);
+       
             nuevo.pista.colaEETnum = nuevo.pista.colaEET.Count;
             nuevo.pista.colaEEVnum = nuevo.pista.colaEEV.Count;
 
             return nuevo;
         }
+
+        private StateRow arrastrarVariablesEst( StateRow nuevo, StateRow _anterior)
+        {
+            nuevo.maxEEVTime = _anterior.maxEEVTime;
+            nuevo.maxEETTime = _anterior.maxEETTime;
+            nuevo.porcAvionesAyDInst = _anterior.porcAvionesAyDInst;
+            nuevo.cantAvionesAyDInst = _anterior.cantAvionesAyDInst;
+            nuevo.acumEETTime = _anterior.acumEETTime;
+            nuevo.acumEEVTime = _anterior.acumEEVTime;
+            nuevo.avgEETTime = _anterior.avgEETTime;
+            nuevo.avgEEVTime = _anterior.avgEEVTime;
+
+            return nuevo;
+        }
     }
+
 }

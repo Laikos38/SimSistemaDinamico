@@ -24,6 +24,17 @@ namespace SimulacionMontecarlo
         public double rndDespegue { get; set; }
         public double tiempoDeDespegue { get; set; }
         public double tiempoFinDeDespegue { get; set; }
+
+        // Variables estadísticas
+        public int cantAvionesAyDInst { get; set; }
+        public double porcAvionesAyDInst { get; set; }
+        public double maxEEVTime { get; set; }
+        public double maxEETTime { get; set; }
+        public double acumEEVTime { get; set; }
+        public double acumEETTime { get; set; }
+        public double avgEEVTime { get; set; }
+        public double avgEETTime { get; set; }
+
         public Pista pista { get; set; }
         public List<Avion> clientes { get; set; }
     }
