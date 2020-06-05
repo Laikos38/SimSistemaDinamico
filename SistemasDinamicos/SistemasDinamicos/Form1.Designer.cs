@@ -51,10 +51,22 @@
             this.txtFirstPlaneArrival = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtPorcAyDInstant = new System.Windows.Forms.TextBox();
+            this.txtMaxTimeEEV = new System.Windows.Forms.TextBox();
+            this.txtAvgTimeEEV = new System.Windows.Forms.TextBox();
+            this.txtAvgTimeEET = new System.Windows.Forms.TextBox();
+            this.txtMaxTimeEET = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvResults
@@ -65,7 +77,7 @@
             this.dgvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvResults.Location = new System.Drawing.Point(6, 19);
             this.dgvResults.Name = "dgvResults";
-            this.dgvResults.Size = new System.Drawing.Size(924, 290);
+            this.dgvResults.Size = new System.Drawing.Size(1321, 372);
             this.dgvResults.TabIndex = 0;
             // 
             // groupBox1
@@ -79,7 +91,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(605, 12);
+            this.groupBox1.Location = new System.Drawing.Point(1002, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(343, 160);
             this.groupBox1.TabIndex = 1;
@@ -171,7 +183,7 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(587, 160);
+            this.groupBox2.Size = new System.Drawing.Size(561, 160);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Parámetros dominio";
@@ -284,20 +296,126 @@
             this.groupBox3.Controls.Add(this.dgvResults);
             this.groupBox3.Location = new System.Drawing.Point(12, 178);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(936, 315);
+            this.groupBox3.Size = new System.Drawing.Size(1333, 397);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Resultados";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.label14);
+            this.groupBox4.Controls.Add(this.label13);
+            this.groupBox4.Controls.Add(this.label12);
+            this.groupBox4.Controls.Add(this.label11);
+            this.groupBox4.Controls.Add(this.label10);
+            this.groupBox4.Controls.Add(this.txtPorcAyDInstant);
+            this.groupBox4.Controls.Add(this.txtMaxTimeEEV);
+            this.groupBox4.Controls.Add(this.txtAvgTimeEEV);
+            this.groupBox4.Controls.Add(this.txtAvgTimeEET);
+            this.groupBox4.Controls.Add(this.txtMaxTimeEET);
+            this.groupBox4.Location = new System.Drawing.Point(580, 12);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(407, 160);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Estadísticas";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(16, 29);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(171, 13);
+            this.label10.TabIndex = 5;
+            this.label10.Text = "Tiempo de espera máximo en tierra";
+            // 
+            // txtPorcAyDInstant
+            // 
+            this.txtPorcAyDInstant.Enabled = false;
+            this.txtPorcAyDInstant.Location = new System.Drawing.Point(120, 123);
+            this.txtPorcAyDInstant.Name = "txtPorcAyDInstant";
+            this.txtPorcAyDInstant.Size = new System.Drawing.Size(168, 20);
+            this.txtPorcAyDInstant.TabIndex = 4;
+            // 
+            // txtMaxTimeEEV
+            // 
+            this.txtMaxTimeEEV.Enabled = false;
+            this.txtMaxTimeEEV.Location = new System.Drawing.Point(216, 42);
+            this.txtMaxTimeEEV.Name = "txtMaxTimeEEV";
+            this.txtMaxTimeEEV.Size = new System.Drawing.Size(171, 20);
+            this.txtMaxTimeEEV.TabIndex = 1;
+            // 
+            // txtAvgTimeEEV
+            // 
+            this.txtAvgTimeEEV.Enabled = false;
+            this.txtAvgTimeEEV.Location = new System.Drawing.Point(216, 81);
+            this.txtAvgTimeEEV.Name = "txtAvgTimeEEV";
+            this.txtAvgTimeEEV.Size = new System.Drawing.Size(171, 20);
+            this.txtAvgTimeEEV.TabIndex = 3;
+            // 
+            // txtAvgTimeEET
+            // 
+            this.txtAvgTimeEET.Enabled = false;
+            this.txtAvgTimeEET.Location = new System.Drawing.Point(19, 81);
+            this.txtAvgTimeEET.Name = "txtAvgTimeEET";
+            this.txtAvgTimeEET.Size = new System.Drawing.Size(168, 20);
+            this.txtAvgTimeEET.TabIndex = 2;
+            // 
+            // txtMaxTimeEET
+            // 
+            this.txtMaxTimeEET.Enabled = false;
+            this.txtMaxTimeEET.Location = new System.Drawing.Point(19, 43);
+            this.txtMaxTimeEET.Name = "txtMaxTimeEET";
+            this.txtMaxTimeEET.Size = new System.Drawing.Size(168, 20);
+            this.txtMaxTimeEET.TabIndex = 0;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(213, 29);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(174, 13);
+            this.label11.TabIndex = 6;
+            this.label11.Text = "Tiempo de espera máximo en vuelo";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(16, 66);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(179, 13);
+            this.label12.TabIndex = 7;
+            this.label12.Text = "Tiempo de espera promedio en tierra";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(213, 65);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(182, 13);
+            this.label13.TabIndex = 8;
+            this.label13.Text = "Tiempo de espera promedio en vuelo";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(94, 107);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(239, 13);
+            this.label14.TabIndex = 9;
+            this.label14.Text = "Porcentaje de aterrizajes y despegues inmediatos";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(960, 505);
+            this.ClientSize = new System.Drawing.Size(1357, 587);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.MinimumSize = new System.Drawing.Size(976, 544);
+            this.MinimumSize = new System.Drawing.Size(1373, 626);
             this.Name = "Form1";
             this.Text = "Simulación Sistemas Dinámicos";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -307,6 +425,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -336,6 +456,17 @@
         private System.Windows.Forms.ComboBox cmbParkedPlanes;
         private System.Windows.Forms.TextBox txtFirstPlaneArrival;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txtPorcAyDInstant;
+        private System.Windows.Forms.TextBox txtMaxTimeEEV;
+        private System.Windows.Forms.TextBox txtAvgTimeEEV;
+        private System.Windows.Forms.TextBox txtAvgTimeEET;
+        private System.Windows.Forms.TextBox txtMaxTimeEET;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
     }
 }
 
