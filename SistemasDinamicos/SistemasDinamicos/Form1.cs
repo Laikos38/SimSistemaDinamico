@@ -216,18 +216,24 @@ namespace SistemasDinamicos
                 this.txtParkingTime1.Enabled = false;
                 this.txtParkingTime2.Enabled = false;
                 this.txtParkingTime3.Enabled = false;
+                this.txtParkingTime1.Text = "";
+                this.txtParkingTime2.Text = "";
+                this.txtParkingTime3.Text = "";
             }
             if (this.cmbParkedPlanes.SelectedIndex == 1)
             {
                 this.txtParkingTime1.Enabled = true;
                 this.txtParkingTime2.Enabled = false;
                 this.txtParkingTime3.Enabled = false;
+                this.txtParkingTime2.Text = "";
+                this.txtParkingTime3.Text = "";
             }
             else if (this.cmbParkedPlanes.SelectedIndex == 2)
             {
                 this.txtParkingTime1.Enabled = true;
                 this.txtParkingTime2.Enabled = true;
                 this.txtParkingTime3.Enabled = false;
+                this.txtParkingTime3.Text = "";
             }
             else if (this.cmbParkedPlanes.SelectedIndex == 3)
             {
@@ -278,6 +284,18 @@ namespace SistemasDinamicos
             BindingFlags.Instance | BindingFlags.SetProperty, null,
             dgvResults, new object[] { true });
             this.ResumeLayout();
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            this.dgvResults.Rows.Clear();
+            this.txtFirstPlaneArrival.Text = "";
+            this.txtFrom.Text = "";
+            this.txtParkingTime1.Text = "";
+            this.txtParkingTime2.Text = "";
+            this.txtParkingTime3.Text = "";
+            this.txtQuantity.Text = "";
+            this.txtTo.Text = "";
         }
     }
 }

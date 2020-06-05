@@ -94,6 +94,7 @@
             this.btnClear.TabIndex = 7;
             this.btnClear.Text = "Limpiar";
             this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // btnSimulate
             // 
@@ -248,6 +249,7 @@
             // 
             // cmbParkedPlanes
             // 
+            this.cmbParkedPlanes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbParkedPlanes.FormattingEnabled = true;
             this.cmbParkedPlanes.Items.AddRange(new object[] {
             "0",
