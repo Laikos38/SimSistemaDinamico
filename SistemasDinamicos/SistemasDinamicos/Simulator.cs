@@ -13,15 +13,17 @@ namespace SimulacionMontecarlo
 {
     class Simulator
     {
-        bool DEBUG = true;
+        public int removed { get; set; }
         public UniformGenerator uniformGeneratorAterrizaje { get; set; }
         public UniformGenerator uniformGeneratorDespegue { get; set; }
         public ConvolutionGenerator convolutionGenerator { get; set; }
         public ExponentialGenerator exponentialGenerator { get; set; }
         public BoxMullerGenerator boxMullerGenerator { get; set; }
         public Generator generator { get; set; }
+        public int from { get; set; }
+        public int quantity { get; set; }
 
-        
+
 
         public Simulator()
         {
@@ -40,8 +42,10 @@ namespace SimulacionMontecarlo
         }
 
 
-        public IList<StateRow> simulate(int quantity, int from, StateRow anterior)
+        public IList<StateRow> simulate(int _quantity, int _from, StateRow anterior)
         {
+            quantity = _quantity;
+            from = _from;
             Dictionary<string, double> tiempos = new Dictionary<string, double>();
             IList<StateRow> stateRows = new List<StateRow>();
 
@@ -56,24 +60,26 @@ namespace SimulacionMontecarlo
                 for (int j = 0; j < anterior.clientes.Count; j++)
                 {
                     if (anterior.clientes[j].tiempoFinAterrizaje != 0)
-                        tiempos.Add("tiempoFinAterrizaje_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinAterrizaje);
+                        tiempos.Add("tiempoFinAterrizaje_" + (j + 1 + removed).ToString(), anterior.clientes[j].tiempoFinAterrizaje);
                     if (anterior.clientes[j].tiempoFinDeDespegue != 0)
-                        tiempos.Add("tiempoFinDeDespegue_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinDeDespegue);
+                        tiempos.Add("tiempoFinDeDespegue_" + (j + 1 + removed).ToString(), anterior.clientes[j].tiempoFinDeDespegue);
                     if (anterior.clientes[j].tiempoPermanencia != 0)
-                        tiempos.Add("tiempoPermanencia_" + (j + 1).ToString(), anterior.clientes[j].tiempoPermanencia);
+                        tiempos.Add("tiempoPermanencia_" + (j + 1 + removed).ToString(), anterior.clientes[j].tiempoPermanencia);
                 }
 
                 // Obtiene diccionario de tiempos ordenado segun menor tiempo
                 var tiemposOrdenados = tiempos.OrderBy(obj => obj.Value).ToDictionary(obj => obj.Key, obj => obj.Value);
                 KeyValuePair<string, double> menorTiempo = tiemposOrdenados.First();
-                
+
+                int value = GetCantidadAvionesEnPermanencia(anterior);
                 // Controlamos que los aviones en tierra sean menores a 30, si lo son, pasamos al siguiente menor tiempo, es decir, el siguiente evento
-                if (menorTiempo.Key == "tiempoProximaLlegada" && (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + GetCantidadAvionesEnPermanencia(anterior) >= 30))
+                while (menorTiempo.Key == "tiempoProximaLlegada" && (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + value >= 30))
                 {
                     tiemposOrdenados.Remove(tiemposOrdenados.First().Key);
                     menorTiempo = tiemposOrdenados.First();
                 }
 
+                int avion=0;
                 // Se crea nuevo staterow segun el evento siguiente determinado
                 switch (menorTiempo.Key)
                 {
@@ -81,15 +87,15 @@ namespace SimulacionMontecarlo
                         actual = CrearStateRowLlegadaAvion(anterior, menorTiempo.Value);
                         break;
                     case var val when new Regex(@"tiempoFinAterrizaje_*").IsMatch(val):
-                        int avionFA = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
-                        actual = CrearStateRowFinAterrizaje(anterior, menorTiempo.Value, avionFA);
+                        avion = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
+                        actual = CrearStateRowFinAterrizaje(anterior, menorTiempo.Value, avion);
                         break;
                     case var someVal when new Regex(@"tiempoFinDeDespegue_*").IsMatch(someVal):
-                        int avionD = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
-                        actual = CrearStateRowFinDeDespegue(anterior, menorTiempo.Value, avionD);
+                        avion = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
+                        actual = CrearStateRowFinDeDespegue(anterior, menorTiempo.Value, avion, i);
                         break;
                     case var someVal when new Regex(@"tiempoPermanencia_*").IsMatch(someVal):
-                        int avion = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
+                        avion = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
                         actual = CrearStateRowFinDePermanencia(anterior, menorTiempo.Value, avion);
                         break;
                 }
@@ -98,11 +104,14 @@ namespace SimulacionMontecarlo
 
                 if (i >= from - 1 && i <= from + 99 || i == (quantity - 1))
                 {
-                    if (from == 0 && i == 0) 
+                    if (from == 0 && i == 0)
+                    {
                         stateRows.Add(anterior);
+                    }
+                    
                     stateRows.Add(actual);
                 }
-
+                
                 anterior = actual;                
             }
 
@@ -196,12 +205,12 @@ namespace SimulacionMontecarlo
             return nuevo;
         }
 
-        private StateRow CrearStateRowFinDeDespegue(StateRow anterior, double tiempoProximoEvento, int avion)
+        private StateRow CrearStateRowFinDeDespegue(StateRow anterior, double tiempoProximoEvento, int avion, int iteration)
         {
             StateRow nuevo = new StateRow();
             StateRow _anterior = anterior;
             nuevo = this.arrastrarVariablesEst(_anterior);
-            nuevo.evento = "Fin Despegue (" + avion.ToString() + ")";
+            nuevo.evento = "Fin Despegue (" + (avion+removed).ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
             nuevo.clientes = new List<Avion>();
             nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
@@ -225,10 +234,19 @@ namespace SimulacionMontecarlo
             }
 
             Avion avionDespegado = new Avion();
-            avionDespegado = nuevo.clientes[avion - 1];
-            nuevo.clientes[avion - 1].tiempoFinDeDespegue = 0;
-            nuevo.clientes[avion - 1].estado = "";
-            nuevo.clientes[avion - 1].disabled = true;
+            avionDespegado = nuevo.clientes[GetIndex(avion)];
+            nuevo.clientes[GetIndex(avion)].tiempoFinDeDespegue = 0;
+            nuevo.clientes[GetIndex(avion)].estado = "";
+            nuevo.clientes[GetIndex(avion)].disabled = true;
+
+            if (!(iteration >= from - 1 && iteration <= from + 99 || iteration == (quantity - 1)))
+            {
+                if (!(from == 0 && iteration == 0))
+                {
+                    nuevo.clientes.RemoveAt(GetIndex(avion));
+                    this.removed += 1;
+                }
+            }
 
             // Calculos variables de pista
             nuevo.pista = new Pista();
@@ -246,16 +264,16 @@ namespace SimulacionMontecarlo
                 nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
                 nuevo.pista.libre = false;
-                nuevo.clientes[avionNuevo.id - 1].tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
-                nuevo.clientes[avionNuevo.id - 1].estado = "EA";
+                nuevo.clientes[GetIndex(avionNuevo.id)].tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
+                nuevo.clientes[GetIndex(avionNuevo.id)].estado = "EA";
 
 
                 // Se chequea si el tiempo de espera en cola del avión desencolado es mayor al máx registrado,
                 // de ser así lo asigna como maxEEVTime.
                 // Puede que el chequeo no sea necesario
-                if (nuevo.clientes[avionNuevo.id - 1].tiempoEEVin != 0)
+                if (nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEEVin != 0)
                 {
-                    double eevTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEEVin;
+                    double eevTime = nuevo.reloj - nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEEVin;
                     if (eevTime > nuevo.maxEEVTime) nuevo.maxEEVTime = eevTime;
 
                     nuevo.acumEEVTime += eevTime;
@@ -270,14 +288,14 @@ namespace SimulacionMontecarlo
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.pista.libre = false;
-                nuevo.clientes[avionNuevo.id - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
-                nuevo.clientes[avionNuevo.id - 1].estado = "ED";
+                nuevo.clientes[GetIndex(avionNuevo.id)].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
+                nuevo.clientes[GetIndex(avionNuevo.id)].estado = "ED";
 
 
                 // Idem cola en vuelo
-                if (nuevo.clientes[avionNuevo.id - 1].tiempoEETin != 0)
+                if (nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEETin != 0)
                 {
-                    double eetTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEETin;
+                    double eetTime = nuevo.reloj - nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEETin;
                     if (eetTime > nuevo.maxEETTime) nuevo.maxEETTime = eetTime;
 
                     nuevo.acumEETTime += eetTime;
@@ -304,7 +322,7 @@ namespace SimulacionMontecarlo
             StateRow nuevo = new StateRow();
             StateRow _anterior = anterior;
             nuevo = this.arrastrarVariablesEst(_anterior);
-            nuevo.evento = "Fin Aterrizaje (" + avion.ToString() + ")" ;
+            nuevo.evento = "Fin Aterrizaje (" + (avion+removed).ToString() + ")" ;
             nuevo.reloj = tiempoProximoEvento;
             nuevo.tiempoProximaLlegada = _anterior.tiempoProximaLlegada;
             // Se arrastran variables estadísticas
@@ -333,9 +351,9 @@ namespace SimulacionMontecarlo
             nuevo.tiempoDePermanencia = convolutionGenerator.Generate(out ac);
             nuevo.rndPermanencia = ac;
             nuevo.tiempoFinPermanencia = nuevo.reloj + nuevo.tiempoDePermanencia;
-            nuevo.clientes[avion - 1].tiempoPermanencia = nuevo.tiempoFinPermanencia;
-            nuevo.clientes[avion - 1].tiempoFinAterrizaje = 0;
-            nuevo.clientes[avion - 1].estado = "EP";
+            nuevo.clientes[GetIndex(avion)].tiempoPermanencia = nuevo.tiempoFinPermanencia;
+            nuevo.clientes[GetIndex(avion)].tiempoFinAterrizaje = 0;
+            nuevo.clientes[GetIndex(avion)].estado = "EP";
 
             // Calculos variables de pista
             nuevo.pista = new Pista();
@@ -353,14 +371,14 @@ namespace SimulacionMontecarlo
                 nuevo.tiempoAterrizaje = this.uniformGeneratorAterrizaje.Generate(nuevo.rndAterrizaje);
                 nuevo.tiempoFinAterrizaje = nuevo.tiempoAterrizaje + nuevo.reloj;
                 nuevo.pista.libre = false;
-                nuevo.clientes[avionNuevo.id - 1].tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
-                nuevo.clientes[avionNuevo.id - 1].estado = "EA";
+                nuevo.clientes[GetIndex(avionNuevo.id)].tiempoFinAterrizaje = nuevo.tiempoFinAterrizaje;
+                nuevo.clientes[GetIndex(avionNuevo.id)].estado = "EA";
 
                 // Se chequea si el tiempo de espera en cola del avión desencolado es mayor al máx registrado,
                 // de ser así lo asigna como maxEEVTime.
-                if(nuevo.clientes[avionNuevo.id - 1].tiempoEEVin != 0)
+                if(nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEEVin != 0)
                 {
-                    double eevTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEEVin;
+                    double eevTime = nuevo.reloj - nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEEVin;
                     if (eevTime > nuevo.maxEEVTime) nuevo.maxEEVTime = eevTime;
 
                     nuevo.acumEEVTime += eevTime;
@@ -374,12 +392,12 @@ namespace SimulacionMontecarlo
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
                 nuevo.pista.libre = false;
-                nuevo.clientes[avionNuevo.id - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
-                nuevo.clientes[avionNuevo.id - 1].estado = "ED";
+                nuevo.clientes[GetIndex(avionNuevo.id)].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
+                nuevo.clientes[GetIndex(avionNuevo.id)].estado = "ED";
 
-                if (nuevo.clientes[avionNuevo.id - 1].tiempoEETin != 0)
+                if (nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEETin != 0)
                 {
-                    double eetTime = nuevo.reloj - nuevo.clientes[avionNuevo.id - 1].tiempoEETin;
+                    double eetTime = nuevo.reloj - nuevo.clientes[GetIndex(avionNuevo.id)].tiempoEETin;
                     if (eetTime > nuevo.maxEETTime) nuevo.maxEETTime = eetTime;
 
                     nuevo.acumEETTime += eetTime;
@@ -406,7 +424,7 @@ namespace SimulacionMontecarlo
             StateRow nuevo = new StateRow();
             StateRow _anterior = anterior;
             nuevo = this.arrastrarVariablesEst(_anterior);
-            nuevo.evento = "Fin permanencia (" + avion.ToString() + ")";
+            nuevo.evento = "Fin permanencia (" + (avion+removed).ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
 
             // Se arrastran variables estadísticas
@@ -450,23 +468,23 @@ namespace SimulacionMontecarlo
 
             if (!nuevo.pista.libre)
             {
-                nuevo.clientes[avion-1].estado = "EET";
-                nuevo.pista.colaEET.Enqueue(nuevo.clientes[avion-1]);
-                nuevo.clientes[avion - 1].tiempoEETin = nuevo.reloj;
+                nuevo.clientes[GetIndex(avion)].estado = "EET";
+                nuevo.pista.colaEET.Enqueue(nuevo.clientes[GetIndex(avion)]);
+                nuevo.clientes[GetIndex(avion)].tiempoEETin = nuevo.reloj;
             }
             else
             {
                 // Calcular variables de despegue
-                nuevo.clientes[avion - 1].estado = "ED";
+                nuevo.clientes[GetIndex(avion)].estado = "ED";
                 nuevo.rndDespegue = this.generator.NextRnd();
                 nuevo.tiempoDeDespegue = this.uniformGeneratorDespegue.Generate(nuevo.rndDespegue);
                 nuevo.tiempoFinDeDespegue = nuevo.tiempoDeDespegue + nuevo.reloj;
-                nuevo.clientes[avion - 1].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
+                nuevo.clientes[GetIndex(avion)].tiempoFinDeDespegue = nuevo.tiempoFinDeDespegue;
                 nuevo.pista.libre = false;
 
-                if (nuevo.clientes[avion - 1].instantLanding) nuevo.cantAvionesAyDInst++;
+                if (nuevo.clientes[GetIndex(avion)].instantLanding) nuevo.cantAvionesAyDInst++;
             }   
-            nuevo.clientes[avion - 1].tiempoPermanencia = 0;
+            nuevo.clientes[GetIndex(avion)].tiempoPermanencia = 0;
 
             // Se recalculan variables estadísticas
             nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(nuevo.clientes.Count)) * 100;
@@ -494,6 +512,13 @@ namespace SimulacionMontecarlo
             nuevo.avgEEVTime = _anterior.avgEEVTime;
 
             return nuevo;
+        }
+
+        private int GetIndex(int idx)
+        {
+            if (idx - 1 - this.removed < 0)
+                return 0;
+            return idx - 1 - this.removed;
         }
     }
 

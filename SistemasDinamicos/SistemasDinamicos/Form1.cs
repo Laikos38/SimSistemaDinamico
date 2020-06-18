@@ -74,7 +74,8 @@ namespace SistemasDinamicos
                     //Console.WriteLine(columnaInicial);
                 }
             }
-            columnaFinal = filasAMostrar.Last().clientes.Last().id;
+            //columnaFinal = filasAMostrar.Last().clientes.Last().id;
+            columnaFinal = filasAMostrar.Last().clientes.Count;
 
             for (int i = 0; i < filasAMostrar.Count; i++)
             {
@@ -160,7 +161,8 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[21].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[22].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-                    this.dgvResults.ColumnCount += ((columnaFinal - columnaInicial) * 2) + 2;
+                    //this.dgvResults.ColumnCount += ((columnaFinal - columnaInicial) * 2) + 2;
+                    this.dgvResults.ColumnCount = ((columnaFinal - columnaInicial) * 2) + 2;
 
                     int count = columnaInicial;
                     for (int j = 23; j <= ((columnaFinal - columnaInicial) * 2) + 23; j += 2)
@@ -200,7 +202,8 @@ namespace SistemasDinamicos
                     truncar(filasAMostrar[i].avgEEVTime)
                 };
 
-                for (int k = columnaInicial - 1; k < (filasAMostrar[i].clientes.Last().id); k++)
+                //for (int k = columnaInicial - 1; k < (filasAMostrar[i].clientes.Last().id); k++)
+                for (int k = columnaInicial - 1; k < (filasAMostrar[i].clientes.Count); k++)
                 {
                     dataFila.Add(filasAMostrar[i].clientes[k].estado);
                     dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[k].tiempoPermanencia));
