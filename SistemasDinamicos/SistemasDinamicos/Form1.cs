@@ -51,8 +51,8 @@ namespace SistemasDinamicos
                 iterationNum = 0
             };
 
-            Simulator simulator = new Simulator();
-            IList<StateRow> filasAMostrar = simulator.simulate(quantity, from, initialize);
+            Simulator2 simulator = new Simulator2();
+            IList<StateRow> filasAMostrar = simulator.simulate(quantity, from, to, initialize);
 
             this.txtMaxTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEETTime).ToString();
             this.txtMaxTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEEVTime).ToString();
@@ -159,8 +159,8 @@ namespace SistemasDinamicos
                 this.dgvResults.Rows[i].Cells[13].Value = diferenteDeCero(filasAMostrar[i].tiempoDeDespegue);
                 this.dgvResults.Rows[i].Cells[14].Value = diferenteDeCero(filasAMostrar[i].tiempoFinDeDespegue);
                 this.dgvResults.Rows[i].Cells[15].Value = filasAMostrar[i].pista.libre ? "Libre" : "Ocupada";
-                this.dgvResults.Rows[i].Cells[16].Value = filasAMostrar[i].pista.colaEETnum;
-                this.dgvResults.Rows[i].Cells[17].Value = filasAMostrar[i].pista.colaEEVnum;
+                this.dgvResults.Rows[i].Cells[16].Value = filasAMostrar[i].pista.colaEET.Count;
+                this.dgvResults.Rows[i].Cells[17].Value = filasAMostrar[i].pista.colaEEV.Count;
                 this.dgvResults.Rows[i].Cells[18].Value = truncar(filasAMostrar[i].porcAvionesAyDInst);
                 this.dgvResults.Rows[i].Cells[19].Value = truncar(filasAMostrar[i].maxEETTime);
                 this.dgvResults.Rows[i].Cells[20].Value = truncar(filasAMostrar[i].avgEETTime);

@@ -9,6 +9,12 @@ namespace SimulacionMontecarlo
 {
     class StateRow
     {
+        public StateRow()
+        {
+            this.pista = new Pista();
+            this.clientes = new List<Avion>();
+        }
+
         public double reloj{ get; set; }
         public string evento { get; set; }
         public int iterationNum { get; set; }
