@@ -63,6 +63,7 @@ namespace SistemasDinamicos
             */
 
             int filas = 0;
+            var columnaInicial = 0;
             for (int i = 0; i < quantity; i++)
             {
                 StateRow actual = simulator.NextStateRow(anterior, i);
@@ -169,6 +170,68 @@ namespace SistemasDinamicos
                     this.dgvResults.Rows[filas].Cells[20].Value = truncar(actual.avgEETTime);
                     this.dgvResults.Rows[filas].Cells[21].Value = truncar(actual.maxEEVTime);
                     this.dgvResults.Rows[filas].Cells[22].Value = truncar(actual.avgEEVTime);
+                    
+
+                    if(i == from)
+                    {
+                        for (int j=0; j<simulator.clientes.Count; j++)
+                        {
+                            if (simulator.clientes[j].estado != "")
+                            {
+                                columnaInicial = j;
+                                break;
+                            }
+                        }
+                    }
+
+                    int cont = 0;
+                    for (int j = columnaInicial; j < simulator.clientes.Count; j++)
+                    {
+                        #region para el drogui
+                        /*
+                        try
+                        {
+                            this.dgvResults.Rows[i].Cells[23 + j + clientesInsertados].Value = simulator.clientes[j].estado;
+                            this.dgvResults.Rows[i].Cells[23 + j + 1 + clientesInsertados].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+                        }
+                        catch
+                        {
+                            this.dgvResults.ColumnCount += 2;
+
+                            this.dgvResults.Columns[23 + j + clientesInsertados].HeaderText = "Estado cliente " + simulator.clientes[j].id.ToString();
+                            this.dgvResults.Columns[23 + j + 1 + clientesInsertados].HeaderText = "T. permanencia " + simulator.clientes[j].id.ToString();
+                            this.dgvResults.Columns[23 + j + clientesInsertados].SortMode = DataGridViewColumnSortMode.NotSortable;
+                            this.dgvResults.Columns[23 + j + 1 + clientesInsertados].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                            this.dgvResults.Rows[i].Cells[23 + j + clientesInsertados].Value = simulator.clientes[j].estado;
+                            this.dgvResults.Rows[i].Cells[23 + j + 1 + clientesInsertados].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+                        }
+                        clientesInsertados += 1;
+                        */
+                        #endregion para el drogui
+
+                        if (simulator.clientes[j].disabled)
+                        {
+                            this.dgvResults.Rows[filas].Cells[23 + cont].Value = simulator.clientes[j].estado;
+                            this.dgvResults.Rows[filas].Cells[23 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+                        }
+                        else
+                        {
+                            this.dgvResults.ColumnCount += 2;
+
+                            this.dgvResults.Columns[23 + cont].HeaderText = "Estado cliente " + simulator.clientes[j].id.ToString();
+                            this.dgvResults.Columns[23 + cont + 1].HeaderText = "T. permanencia " + simulator.clientes[j].id.ToString();
+                            this.dgvResults.Columns[23 + cont].SortMode = DataGridViewColumnSortMode.NotSortable;
+                            this.dgvResults.Columns[23 + cont + 1].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                            this.dgvResults.Rows[filas].Cells[23 + cont].Value = simulator.clientes[j].estado;
+                            this.dgvResults.Rows[filas].Cells[23 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+
+                            simulator.clientes[j].disabled = true;
+                        }
+                        cont += 1;
+                    }
+
                     filas += 1;
                 }
 

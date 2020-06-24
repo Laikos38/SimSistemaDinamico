@@ -41,7 +41,6 @@ namespace SimulacionMontecarlo
             generator = new Generator();
         }
 
-
         /*
         public IList<StateRow> simulate(int quantity, int from, StateRow anterior)
         {
@@ -246,7 +245,7 @@ namespace SimulacionMontecarlo
 
             this.clientes[avion - 1].tiempoFinDeDespegue = 0;
             this.clientes[avion - 1].estado = "";
-            this.clientes[avion - 1].disabled = true;
+            //this.clientes[avion - 1].disabled = true;
 
             // Calculos variables de pista
             nuevo.pista = new Pista();
