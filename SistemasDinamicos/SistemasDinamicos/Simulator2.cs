@@ -19,6 +19,7 @@ namespace SistemasDinamicos
         public BoxMullerGenerator boxMullerGenerator { get; set; }
         public Generator generator { get; set; }
         public int from { get; set; }
+        public int to { get; set; }
         public int quantity { get; set; }
 
         public Simulator2()
@@ -40,6 +41,8 @@ namespace SistemasDinamicos
         public IList<StateRow> simulate(int quantity, int from, int to, StateRow anterior)
         {
             IList<StateRow> rowsToShow = new List<StateRow>();
+            this.from = from;
+            this.to = to;
 
             for (int i=0; i<quantity; i++)
             {
@@ -123,7 +126,6 @@ namespace SistemasDinamicos
             nuevoStateRow.tiempoEntreLlegadas = this.exponentialGenerator.Generate(nuevoStateRow.rndLlegada);
             nuevoStateRow.tiempoProximaLlegada = nuevoStateRow.tiempoEntreLlegadas + nuevoStateRow.reloj;
 
-
             // Controlamos que los aviones en tierra sean menores a 30, si lo son, pasamos al siguiente menor tiempo, es decir, el siguiente evento
             int cantAvionesEnPermanencia = GetCantidadAvionesEnPermanencia(anterior);
             if (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + cantAvionesEnPermanencia >= 30)
@@ -132,6 +134,21 @@ namespace SistemasDinamicos
                 nuevoStateRow.pista.libre = anterior.pista.libre;
                 nuevoStateRow.pista.colaEET = new Queue<Avion>(anterior.pista.colaEET);
                 nuevoStateRow.pista.colaEEV = new Queue<Avion>(anterior.pista.colaEEV);
+
+                nuevoStateRow.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
+
+                nuevoStateRow.tiempoFinDeDespegue = anterior.tiempoFinDeDespegue;
+
+                nuevoStateRow.tiempoFinPermanencia = anterior.tiempoFinPermanencia;
+
+                nuevoStateRow.clientes = CopiarClientes(anterior.clientes);
+
+                // Se recalculan variables estadísticas
+                nuevoStateRow.porcAvionesAyDInst = (Convert.ToDouble(nuevoStateRow.cantAvionesAyDInst) / Convert.ToDouble(nuevoStateRow.clientes.Count)) * 100;
+                nuevoStateRow.avgEETTime = Convert.ToDouble(nuevoStateRow.acumEETTime) / Convert.ToDouble(nuevoStateRow.clientes.Count);
+                nuevoStateRow.avgEEVTime = Convert.ToDouble(nuevoStateRow.acumEEVTime) / Convert.ToDouble(nuevoStateRow.clientes.Count);
+
+                return nuevoStateRow;
             }
 
             // Calculos para aterrizaje
@@ -183,7 +200,7 @@ namespace SistemasDinamicos
             nuevoStateRow = this.arrastrarVariablesEst(anterior);
 
             // Seteo nombre de evento y reloj
-            nuevoStateRow.evento = "Fin Aterrizaje (" + (avion + removed).ToString() + ")";
+            nuevoStateRow.evento = "Fin Aterrizaje (" + (avion).ToString() + ")";
             nuevoStateRow.reloj = tiempoProximoEvento;
 
             // Seteo valores de llegada de avion
@@ -267,7 +284,7 @@ namespace SistemasDinamicos
             nuevoStateRow = this.arrastrarVariablesEst(anterior);
 
             // Seteo nombre de evento y reloj
-            nuevoStateRow.evento = "Fin permanencia (" + (avion + removed).ToString() + ")";
+            nuevoStateRow.evento = "Fin permanencia (" + avion.ToString() + ")";
             nuevoStateRow.reloj = tiempoProximoEvento;
 
             // Seteo siguiente tiempo de llegada de prox avion
@@ -325,7 +342,7 @@ namespace SistemasDinamicos
             nuevoStateRow = this.arrastrarVariablesEst(anterior);
 
             // Seteo nombre de evento y reloj
-            nuevoStateRow.evento = "Fin Despegue (" + (avion + removed).ToString() + ")";
+            nuevoStateRow.evento = "Fin Despegue (" + avion.ToString() + ")";
             nuevoStateRow.reloj = tiempoProximoEvento;
 
             // Seteo siguiente tiempo de llegada de prox avion

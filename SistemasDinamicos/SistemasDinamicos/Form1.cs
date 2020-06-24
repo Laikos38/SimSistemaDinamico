@@ -53,6 +53,8 @@ namespace SistemasDinamicos
 
             Simulator2 simulator = new Simulator2();
             IList<StateRow> filasAMostrar = simulator.simulate(quantity, from, to, initialize);
+            //Simulator simulator = new Simulator();
+            //IList<StateRow> filasAMostrar = simulator.simulate(quantity, from, initialize);
 
             this.txtMaxTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEETTime).ToString();
             this.txtMaxTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEEVTime).ToString();
