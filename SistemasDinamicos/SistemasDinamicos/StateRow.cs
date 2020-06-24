@@ -36,6 +36,5 @@ namespace SimulacionMontecarlo
         public double avgEETTime { get; set; }
 
         public Pista pista { get; set; }
-        public List<Avion> clientes { get; set; }
     }
 }

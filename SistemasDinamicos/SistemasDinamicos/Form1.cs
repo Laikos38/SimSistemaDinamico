@@ -41,9 +41,11 @@ namespace SistemasDinamicos
             this.txtTo.Text = to.ToString();
             double proxAvion = Convert.ToDouble(this.txtFirstPlaneArrival.Text);
 
-            StateRow initialize = new StateRow()
+            Simulator simulator = new Simulator();
+            simulator.clientes = this.getAvionesEstacionados();
+            
+            StateRow anterior = new StateRow()
             {
-                clientes = this.getAvionesEstacionados(),
                 tiempoProximaLlegada = proxAvion,
                 pista = new Pista() { libre = true, colaEET = new Queue<Avion>(), colaEEV = new Queue<Avion>() },
                 evento = "Inicializacion",
@@ -51,36 +53,20 @@ namespace SistemasDinamicos
                 iterationNum = 0
             };
 
-            Simulator simulator = new Simulator();
-            IList<StateRow> filasAMostrar = simulator.simulate(quantity, from, initialize);
 
+            /*
             this.txtMaxTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEETTime).ToString();
             this.txtMaxTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEEVTime).ToString();
             this.txtAvgTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEETTime).ToString();
             this.txtAvgTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEEVTime).ToString();
             this.txtPorcAyDInstant.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].porcAvionesAyDInst).ToString();
+            */
 
-            if (to != filasAMostrar.Last().iterationNum)
-                filasAMostrar.Remove(filasAMostrar.Last());
-
-            int columnaInicial = 0;
-            int columnaFinal = 0;
-            for (int a = 0; a < filasAMostrar[0].clientes.Count; a++)
+            int filas = 0;
+            for (int i = 0; i < quantity; i++)
             {
-                if (!filasAMostrar[0].clientes[a].disabled)
-                {
-                    columnaInicial = filasAMostrar[0].clientes[a].id;
-                    break;
-                    //Console.WriteLine(columnaInicial);
-                }
-            }
-            columnaFinal = filasAMostrar.Last().clientes.Last().id;
+                StateRow actual = simulator.NextStateRow(anterior, i);
 
-            for (int i = 0; i < filasAMostrar.Count; i++)
-            {
-                string estadoPista = filasAMostrar[i].pista.libre ? "Libre" : "Ocupada";
-
-                // Manejo de columnas
                 if (i == 0)
                 {
                     this.dgvResults.ColumnCount = 23;
@@ -102,7 +88,6 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[4].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[5].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-
                     this.dgvResults.Columns[6].HeaderText = "RND";
                     this.dgvResults.Columns[7].HeaderText = "T. aterrizaje";
                     this.dgvResults.Columns[8].HeaderText = "T. fin aterrizaje";
@@ -112,7 +97,6 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[6].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[7].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[8].SortMode = DataGridViewColumnSortMode.NotSortable;
-
 
                     this.dgvResults.Columns[9].HeaderText = "SUM RND";
                     this.dgvResults.Columns[10].HeaderText = "T. permanencia";
@@ -124,7 +108,6 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[10].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[11].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-
                     this.dgvResults.Columns[12].HeaderText = "RND";
                     this.dgvResults.Columns[13].HeaderText = "T. despegue";
                     this.dgvResults.Columns[14].HeaderText = "T. fin despegue";
@@ -134,7 +117,6 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[12].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[13].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[14].SortMode = DataGridViewColumnSortMode.NotSortable;
-
 
                     this.dgvResults.Columns[15].HeaderText = "Estado pista";
                     this.dgvResults.Columns[16].HeaderText = "Cola EET";
@@ -159,54 +141,39 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[20].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[21].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[22].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                    this.dgvResults.ColumnCount += ((columnaFinal - columnaInicial) * 2) + 2;
-
-                    int count = columnaInicial;
-                    for (int j = 23; j <= ((columnaFinal - columnaInicial) * 2) + 23; j += 2)
-                    {
-                        this.dgvResults.Columns[j].HeaderText = "Estado cliente " + count.ToString();
-                        this.dgvResults.Columns[j + 1].HeaderText = "T. permanencia " + count.ToString();
-                        this.dgvResults.Columns[j].SortMode = DataGridViewColumnSortMode.NotSortable;
-                        this.dgvResults.Columns[j+1].SortMode = DataGridViewColumnSortMode.NotSortable;
-                        count++;
-                    }
                 }
 
-                // Manejo de filas
-                List<object> dataFila = new List<object>() {
-                    diferenteDeCero(filasAMostrar[i].iterationNum),
-                    filasAMostrar[i].evento,
-                    diferenteDeCero(filasAMostrar[i].reloj),
-                    diferenteDeCero(filasAMostrar[i].rndLlegada),
-                    diferenteDeCero(filasAMostrar[i].tiempoEntreLlegadas),
-                    diferenteDeCero(filasAMostrar[i].tiempoProximaLlegada),
-                    diferenteDeCero(filasAMostrar[i].rndAterrizaje),
-                    diferenteDeCero(filasAMostrar[i].tiempoAterrizaje),
-                    diferenteDeCero(filasAMostrar[i].tiempoFinAterrizaje),
-                    diferenteDeCero(filasAMostrar[i].rndPermanencia),
-                    diferenteDeCero(filasAMostrar[i].tiempoDePermanencia),
-                    diferenteDeCero(filasAMostrar[i].tiempoFinPermanencia),
-                    diferenteDeCero(filasAMostrar[i].rndDespegue),
-                    diferenteDeCero(filasAMostrar[i].tiempoDeDespegue),
-                    diferenteDeCero(filasAMostrar[i].tiempoFinDeDespegue),
-                    estadoPista,
-                    truncar(filasAMostrar[i].pista.colaEETnum),
-                    truncar(filasAMostrar[i].pista.colaEEVnum),
-                    truncar(filasAMostrar[i].porcAvionesAyDInst),
-                    truncar(filasAMostrar[i].maxEETTime),
-                    truncar(filasAMostrar[i].avgEETTime),
-                    truncar(filasAMostrar[i].maxEEVTime),
-                    truncar(filasAMostrar[i].avgEEVTime)
-                };
-
-                for (int k = columnaInicial - 1; k < (filasAMostrar[i].clientes.Last().id); k++)
+                if (i >= from && i< to)
                 {
-                    dataFila.Add(filasAMostrar[i].clientes[k].estado);
-                    dataFila.Add(diferenteDeCero(filasAMostrar[i].clientes[k].tiempoPermanencia));
+                    this.dgvResults.Rows.Add();
+                    this.dgvResults.Rows[filas].Cells[0].Value = actual.iterationNum;
+                    this.dgvResults.Rows[filas].Cells[1].Value = actual.evento;
+                    this.dgvResults.Rows[filas].Cells[2].Value = truncar(actual.reloj);
+                    this.dgvResults.Rows[filas].Cells[3].Value = diferenteDeCero(actual.rndLlegada);
+                    this.dgvResults.Rows[filas].Cells[4].Value = diferenteDeCero(actual.tiempoEntreLlegadas);
+                    this.dgvResults.Rows[filas].Cells[5].Value = diferenteDeCero(actual.tiempoProximaLlegada);
+                    this.dgvResults.Rows[filas].Cells[6].Value = diferenteDeCero(actual.rndAterrizaje);
+                    this.dgvResults.Rows[filas].Cells[7].Value = diferenteDeCero(actual.tiempoAterrizaje);
+                    this.dgvResults.Rows[filas].Cells[8].Value = diferenteDeCero(actual.tiempoFinAterrizaje);
+                    this.dgvResults.Rows[filas].Cells[9].Value = diferenteDeCero(actual.rndPermanencia);
+                    this.dgvResults.Rows[filas].Cells[10].Value = diferenteDeCero(actual.tiempoDePermanencia);
+                    this.dgvResults.Rows[filas].Cells[11].Value = diferenteDeCero(actual.tiempoFinPermanencia);
+                    this.dgvResults.Rows[filas].Cells[12].Value = diferenteDeCero(actual.rndDespegue);
+                    this.dgvResults.Rows[filas].Cells[13].Value = diferenteDeCero(actual.tiempoDeDespegue);
+                    this.dgvResults.Rows[filas].Cells[14].Value = diferenteDeCero(actual.tiempoFinDeDespegue);
+                    this.dgvResults.Rows[filas].Cells[15].Value = actual.pista.libre ? "Libre" : "Ocupada";
+                    this.dgvResults.Rows[filas].Cells[16].Value = actual.pista.colaEET.Count;
+                    this.dgvResults.Rows[filas].Cells[17].Value = actual.pista.colaEEV.Count;
+                    this.dgvResults.Rows[filas].Cells[18].Value = truncar(actual.porcAvionesAyDInst);
+                    this.dgvResults.Rows[filas].Cells[19].Value = truncar(actual.maxEETTime);
+                    this.dgvResults.Rows[filas].Cells[20].Value = truncar(actual.avgEETTime);
+                    this.dgvResults.Rows[filas].Cells[21].Value = truncar(actual.maxEEVTime);
+                    this.dgvResults.Rows[filas].Cells[22].Value = truncar(actual.avgEEVTime);
+                    filas += 1;
                 }
 
-                this.dgvResults.Rows.Add(dataFila.ToArray());
+                anterior = actual;
+
             }
 
             this.dgvResults.AllowUserToOrderColumns = false;
