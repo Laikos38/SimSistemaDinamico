@@ -9,10 +9,12 @@ namespace SistemasDinamicos
 {
     class Pista
     {
-        public bool libre { get; set; }
+        public String state { get; set; }
         public Queue<Avion> colaEET { get; set; }
         public Queue<Avion> colaEEV { get; set; }
+        public double tiempoRestanteAoD { get; set; }
         public int colaEETnum { get; set; }
         public int colaEEVnum { get; set; }
+        public int idClienteActual { get; set; }
     }
 }

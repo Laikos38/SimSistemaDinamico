@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GeneradorDeNumerosAleatorios;
 
 namespace SistemasDinamicos
 {
@@ -43,14 +44,30 @@ namespace SistemasDinamicos
 
             Simulator simulator = new Simulator();
             simulator.clientes = this.getAvionesEstacionados();
-            
+
+            Generator generator = new Generator();
+
+            double rndInesI = generator.NextRnd();
+            double tiempoInesI;
+            if (rndInesI < 0.2)
+            {
+                tiempoInesI = 320.7;
+            }
+            else if (rndInesI < 0.5)
+            {
+                tiempoInesI = 367.5;
+            }
+            else tiempoInesI = 417.2;
+
             StateRow anterior = new StateRow()
             {
                 tiempoProximaLlegada = proxAvion,
-                pista = new Pista() { libre = true, colaEET = new Queue<Avion>(), colaEEV = new Queue<Avion>() },
+                pista = new Pista() { state = "Libre", colaEET = new Queue<Avion>(), colaEEV = new Queue<Avion>() },
                 evento = "Inicializacion",
                 reloj = 0,
-                iterationNum = 0
+                iterationNum = 0,
+                rndInestable = rndInesI,
+                tiempoInestabilidad = tiempoInesI
             };
 
 
@@ -161,7 +178,7 @@ namespace SistemasDinamicos
                     this.dgvResults.Rows[filas].Cells[12].Value = diferenteDeCero(actual.rndDespegue);
                     this.dgvResults.Rows[filas].Cells[13].Value = diferenteDeCero(actual.tiempoDeDespegue);
                     this.dgvResults.Rows[filas].Cells[14].Value = diferenteDeCero(actual.tiempoFinDeDespegue);
-                    this.dgvResults.Rows[filas].Cells[15].Value = actual.pista.libre ? "Libre" : "Ocupada";
+                    this.dgvResults.Rows[filas].Cells[15].Value = actual.pista.state;
                     this.dgvResults.Rows[filas].Cells[16].Value = actual.pista.colaEET.Count;
                     this.dgvResults.Rows[filas].Cells[17].Value = actual.pista.colaEEV.Count;
                     this.dgvResults.Rows[filas].Cells[18].Value = truncar(actual.porcAvionesAyDInst);
