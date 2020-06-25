@@ -72,11 +72,7 @@ namespace SistemasDinamicos
 
 
             /*
-            this.txtMaxTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEETTime).ToString();
-            this.txtMaxTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].maxEEVTime).ToString();
-            this.txtAvgTimeEET.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEETTime).ToString();
-            this.txtAvgTimeEEV.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].avgEEVTime).ToString();
-            this.txtPorcAyDInstant.Text = truncar(filasAMostrar[filasAMostrar.Count - 1].porcAvionesAyDInst).ToString();
+            
             */
 
             int filas = 0;
@@ -246,8 +242,16 @@ namespace SistemasDinamicos
                     filas += 1;
                 }
 
-                anterior = actual;
+                if (i == quantity - 1)
+                {
+                    this.txtMaxTimeEET.Text = truncar(actual.maxEETTime).ToString();
+                    this.txtMaxTimeEEV.Text = truncar(actual.maxEEVTime).ToString();
+                    this.txtAvgTimeEET.Text = truncar(actual.avgEETTime).ToString();
+                    this.txtAvgTimeEEV.Text = truncar(actual.avgEEVTime).ToString();
+                    this.txtPorcAyDInstant.Text = truncar(actual.porcAvionesAyDInst).ToString();
+                }
 
+                anterior = actual;
             }
 
             this.dgvResults.AllowUserToOrderColumns = false;
