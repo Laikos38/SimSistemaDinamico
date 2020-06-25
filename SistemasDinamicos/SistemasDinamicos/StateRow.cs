@@ -24,7 +24,10 @@ namespace SimulacionMontecarlo
         public double rndDespegue { get; set; }
         public double tiempoDeDespegue { get; set; }
         public double tiempoFinDeDespegue { get; set; }
-        public int ultIndice { get; set; }
+
+        public double rndInestable { get; set; }
+        public double tiempoInestabilidad { get; set; }
+        public double tiempoFinPurga { get; set; }
 
         // Variables estadísticas
         public int cantAvionesAyDInst { get; set; }
