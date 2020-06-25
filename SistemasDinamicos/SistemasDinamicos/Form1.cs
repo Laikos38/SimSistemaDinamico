@@ -229,7 +229,7 @@ namespace SistemasDinamicos
 
                             simulator.clientes[j].disabled = true;
                         }
-                        cont += 1;
+                        cont += 2;
                     }
 
                     filas += 1;

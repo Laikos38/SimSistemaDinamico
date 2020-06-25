@@ -198,8 +198,8 @@ namespace SimulacionMontecarlo
             // Calculos variables de pista
             nuevo.pista = new Pista();
             nuevo.pista.libre = anterior.pista.libre;
-            nuevo.pista.colaEEV = new Queue<Avion>(anterior.pista.colaEET);
-            nuevo.pista.colaEET = new Queue<Avion>(anterior.pista.colaEEV);
+            nuevo.pista.colaEEV = new Queue<Avion>(anterior.pista.colaEEV);
+            nuevo.pista.colaEET = new Queue<Avion>(anterior.pista.colaEET);
             if (!nuevo.pista.libre)
             {
                 avionNuevo.estado = "EEV";
