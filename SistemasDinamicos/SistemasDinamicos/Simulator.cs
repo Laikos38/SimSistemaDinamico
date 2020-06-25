@@ -183,7 +183,7 @@ namespace SimulacionMontecarlo
 
             // Controlamos que los aviones en tierra sean menores a 30, si lo son, pasamos al siguiente menor tiempo, es decir, el siguiente evento
             int cantAvionesEnPermanencia = GetCantidadAvionesEnPermanencia();
-            if (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + cantAvionesEnPermanencia >= 5)
+            if (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + cantAvionesEnPermanencia >= 30)
             {
                 nuevo = this.arrastrarVariablesEst(anterior);
                 nuevo.evento = "Rechazo avión";
