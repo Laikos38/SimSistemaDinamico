@@ -41,77 +41,6 @@ namespace SimulacionMontecarlo
             generator = new Generator();
         }
 
-        /*
-        public IList<StateRow> simulate(int quantity, int from, StateRow anterior)
-        {
-            Dictionary<string, double> tiempos = new Dictionary<string, double>();
-            IList<StateRow> stateRows = new List<StateRow>();
-
-            for (int i=0; i<quantity; i++)
-            {
-                StateRow actual = new StateRow();
-
-                // Se arma diccionario con todos los tiempos del vector para determinar el menor, es decir, el siguiente evento
-                tiempos.Clear();
-                if (anterior.tiempoProximaLlegada != 0)
-                    tiempos.Add("tiempoProximaLlegada", anterior.tiempoProximaLlegada);
-                for (int j = 0; j < anterior.clientes.Count; j++)
-                {
-                    if (anterior.clientes[j].tiempoFinAterrizaje != 0)
-                        tiempos.Add("tiempoFinAterrizaje_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinAterrizaje);
-                    if (anterior.clientes[j].tiempoFinDeDespegue != 0)
-                        tiempos.Add("tiempoFinDeDespegue_" + (j + 1).ToString(), anterior.clientes[j].tiempoFinDeDespegue);
-                    if (anterior.clientes[j].tiempoPermanencia != 0)
-                        tiempos.Add("tiempoPermanencia_" + (j + 1).ToString(), anterior.clientes[j].tiempoPermanencia);
-                }
-
-                // Obtiene diccionario de tiempos ordenado segun menor tiempo
-                var tiemposOrdenados = tiempos.OrderBy(obj => obj.Value).ToDictionary(obj => obj.Key, obj => obj.Value);
-                KeyValuePair<string, double> menorTiempo = tiemposOrdenados.First();
-                
-                // Controlamos que los aviones en tierra sean menores a 30, si lo son, pasamos al siguiente menor tiempo, es decir, el siguiente evento
-                if (menorTiempo.Key == "tiempoProximaLlegada" && (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + GetCantidadAvionesEnPermanencia(anterior) >= 30))
-                {
-                    tiemposOrdenados.Remove(tiemposOrdenados.First().Key);
-                    menorTiempo = tiemposOrdenados.First();
-                }
-
-                // Se crea nuevo staterow segun el evento siguiente determinado
-                switch (menorTiempo.Key)
-                {
-                    case "tiempoProximaLlegada":
-                        actual = CrearStateRowLlegadaAvion(anterior, menorTiempo.Value);
-                        break;
-                    case var val when new Regex(@"tiempoFinAterrizaje_*").IsMatch(val):
-                        int avionFA = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
-                        actual = CrearStateRowFinAterrizaje(anterior, menorTiempo.Value, avionFA);
-                        break;
-                    case var someVal when new Regex(@"tiempoFinDeDespegue_*").IsMatch(someVal):
-                        int avionD = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
-                        actual = CrearStateRowFinDeDespegue(anterior, menorTiempo.Value, avionD);
-                        break;
-                    case var someVal when new Regex(@"tiempoPermanencia_*").IsMatch(someVal):
-                        int avion = Convert.ToInt32(menorTiempo.Key.Split('_')[1]);
-                        actual = CrearStateRowFinDePermanencia(anterior, menorTiempo.Value, avion);
-                        break;
-                }
-
-                actual.iterationNum = i + 1;
-
-                if (i >= from - 1 && i <= from + 99 || i == (quantity - 1))
-                {
-                    if (from == 0 && i == 0) 
-                        stateRows.Add(anterior);
-                    stateRows.Add(actual);
-                }
-
-                anterior = actual;                
-            }
-
-            return stateRows;
-        }
-        */
-
         public StateRow NextStateRow(StateRow anterior, int i)
         {
             // Creo vector de estado para fila actual
@@ -139,6 +68,12 @@ namespace SimulacionMontecarlo
                     avion = Convert.ToInt32(siguienteEvento.Key.Split('_')[1]);
                     actual = CrearStateRowFinDePermanencia(anterior, siguienteEvento.Value, avion);
                     break;
+                case "tiempoInestabilidad":
+                    actual = CrearStateRowInicioInestabilidad(anterior, siguienteEvento.Value);
+                    break;
+                case "tiempoFinPurga":
+                    actual = CrearStateRowFinPurga(anterior, siguienteEvento.Value);
+                    break;
             }
 
             actual.iterationNum = i + 1;
@@ -150,7 +85,13 @@ namespace SimulacionMontecarlo
         {
             if (anterior.tiempoProximaLlegada != 0)
                 tiempos.Add("tiempoProximaLlegada", anterior.tiempoProximaLlegada);
-        
+            
+            if (anterior.tiempoInestabilidad != 0)
+                tiempos.Add("tiempoInestabilidad", anterior.tiempoInestabilidad);
+
+            if (anterior.tiempoFinPurga != 0)
+                tiempos.Add("tiempoFinPurga", anterior.tiempoFinPurga);
+
             // Checkear optimizacion (desde - hasta)
             for (int j = 0; j < this.clientes.Count; j++)
             {
@@ -208,12 +149,17 @@ namespace SimulacionMontecarlo
                 nuevo.pista.state = anterior.pista.state;
                 nuevo.pista.colaEET = new Queue<Avion>(anterior.pista.colaEET);
                 nuevo.pista.colaEEV = new Queue<Avion>(anterior.pista.colaEEV);
+                nuevo.pista.tiempoRestanteAoD = anterior.pista.tiempoRestanteAoD;
+                nuevo.pista.idClienteActual = anterior.pista.idClienteActual;
 
                 nuevo.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
 
                 nuevo.tiempoFinDeDespegue = anterior.tiempoFinDeDespegue;
 
                 nuevo.tiempoFinPermanencia = anterior.tiempoFinPermanencia;
+
+                nuevo.tiempoFinPurga = anterior.tiempoFinPurga;
+                nuevo.tiempoInestabilidad = anterior.tiempoInestabilidad;
 
                 // Se recalculan variables estadísticas
                 nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(this.clientes.Count)) * 100;
@@ -552,7 +498,7 @@ namespace SimulacionMontecarlo
             nuevo.pista.colaEET = new Queue<Avion>(anterior.pista.colaEET);
 
             // Calculos purga
-            nuevo.tiempoFinPurga = nuevo.reloj + 20;
+            nuevo.tiempoFinPurga = nuevo.reloj + 20.0000;
 
             // Se recalculan variables estadísticas
             nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(this.clientes.Count)) * 100;

@@ -51,13 +51,13 @@ namespace SistemasDinamicos
             double tiempoInesI;
             if (rndInesI < 0.2)
             {
-                tiempoInesI = 320.7;
+                tiempoInesI = 320.7000;
             }
             else if (rndInesI < 0.5)
             {
-                tiempoInesI = 367.5;
+                tiempoInesI = 367.5000;
             }
-            else tiempoInesI = 417.2;
+            else tiempoInesI = 417.2000;
 
             StateRow anterior = new StateRow()
             {
@@ -87,7 +87,7 @@ namespace SistemasDinamicos
 
                 if (i == 0)
                 {
-                    this.dgvResults.ColumnCount = 23;
+                    this.dgvResults.ColumnCount = 27;
 
                     this.dgvResults.Columns[0].HeaderText = "n°";
                     this.dgvResults.Columns[1].HeaderText = "Evento";
@@ -136,29 +136,42 @@ namespace SistemasDinamicos
                     this.dgvResults.Columns[13].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[14].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-                    this.dgvResults.Columns[15].HeaderText = "Estado pista";
-                    this.dgvResults.Columns[16].HeaderText = "Cola EET";
-                    this.dgvResults.Columns[17].HeaderText = "Cola EEV";
+                    this.dgvResults.Columns[15].HeaderText = "RND";
+                    this.dgvResults.Columns[16].HeaderText = "T. sig. interrupción";
+                    this.dgvResults.Columns[17].HeaderText = "T. fin purga";
+                    this.dgvResults.Columns[15].DefaultCellStyle.BackColor = Color.LightGreen;
+                    this.dgvResults.Columns[16].DefaultCellStyle.BackColor = Color.LightGreen;
+                    this.dgvResults.Columns[17].DefaultCellStyle.BackColor = Color.LightGreen;
                     this.dgvResults.Columns[15].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[16].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[17].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-                    this.dgvResults.Columns[18].HeaderText = "% aviones sin espera";
-                    this.dgvResults.Columns[19].HeaderText = "Máx. T. EET";
-                    this.dgvResults.Columns[20].HeaderText = "Prom. T. EET";
-                    this.dgvResults.Columns[21].HeaderText = "Máx. T. EEV";
-                    this.dgvResults.Columns[22].HeaderText = "Prom. T. EEV";
-                    this.dgvResults.Columns[18].DefaultCellStyle.BackColor = Color.MediumAquamarine;
-                    this.dgvResults.Columns[19].DefaultCellStyle.BackColor = Color.DarkSalmon;
-                    this.dgvResults.Columns[20].DefaultCellStyle.BackColor = Color.DarkSalmon;
-                    this.dgvResults.Columns[21].DefaultCellStyle.BackColor = Color.LightSteelBlue;
-                    this.dgvResults.Columns[22].DefaultCellStyle.BackColor = Color.LightSteelBlue;
-
+                    this.dgvResults.Columns[18].HeaderText = "Estado pista";
+                    this.dgvResults.Columns[19].HeaderText = "Cola EET";
+                    this.dgvResults.Columns[20].HeaderText = "Cola EEV";
+                    this.dgvResults.Columns[21].HeaderText = "T. restante suspensión";
                     this.dgvResults.Columns[18].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[19].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[20].SortMode = DataGridViewColumnSortMode.NotSortable;
                     this.dgvResults.Columns[21].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+
+                    this.dgvResults.Columns[22].HeaderText = "% aviones sin espera";
+                    this.dgvResults.Columns[23].HeaderText = "Máx. T. EET";
+                    this.dgvResults.Columns[24].HeaderText = "Prom. T. EET";
+                    this.dgvResults.Columns[25].HeaderText = "Máx. T. EEV";
+                    this.dgvResults.Columns[26].HeaderText = "Prom. T. EEV";
+                    this.dgvResults.Columns[22].DefaultCellStyle.BackColor = Color.MediumAquamarine;
+                    this.dgvResults.Columns[23].DefaultCellStyle.BackColor = Color.DarkSalmon;
+                    this.dgvResults.Columns[24].DefaultCellStyle.BackColor = Color.DarkSalmon;
+                    this.dgvResults.Columns[25].DefaultCellStyle.BackColor = Color.LightSteelBlue;
+                    this.dgvResults.Columns[26].DefaultCellStyle.BackColor = Color.LightSteelBlue;
                     this.dgvResults.Columns[22].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[23].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[24].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[25].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dgvResults.Columns[26].SortMode = DataGridViewColumnSortMode.NotSortable;
+
                 }
 
                 if (i >= from && i< to)
@@ -179,14 +192,18 @@ namespace SistemasDinamicos
                     this.dgvResults.Rows[filas].Cells[12].Value = diferenteDeCero(actual.rndDespegue);
                     this.dgvResults.Rows[filas].Cells[13].Value = diferenteDeCero(actual.tiempoDeDespegue);
                     this.dgvResults.Rows[filas].Cells[14].Value = diferenteDeCero(actual.tiempoFinDeDespegue);
-                    this.dgvResults.Rows[filas].Cells[15].Value = actual.pista.state;
-                    this.dgvResults.Rows[filas].Cells[16].Value = actual.pista.colaEET.Count;
-                    this.dgvResults.Rows[filas].Cells[17].Value = actual.pista.colaEEV.Count;
-                    this.dgvResults.Rows[filas].Cells[18].Value = truncar(actual.porcAvionesAyDInst);
-                    this.dgvResults.Rows[filas].Cells[19].Value = truncar(actual.maxEETTime);
-                    this.dgvResults.Rows[filas].Cells[20].Value = truncar(actual.avgEETTime);
-                    this.dgvResults.Rows[filas].Cells[21].Value = truncar(actual.maxEEVTime);
-                    this.dgvResults.Rows[filas].Cells[22].Value = truncar(actual.avgEEVTime);
+                    this.dgvResults.Rows[filas].Cells[15].Value = diferenteDeCero(actual.rndInestable);
+                    this.dgvResults.Rows[filas].Cells[16].Value = diferenteDeCero(actual.tiempoInestabilidad);
+                    this.dgvResults.Rows[filas].Cells[17].Value = diferenteDeCero(actual.tiempoFinPurga);
+                    this.dgvResults.Rows[filas].Cells[18].Value = actual.pista.state;
+                    this.dgvResults.Rows[filas].Cells[19].Value = actual.pista.colaEET.Count;
+                    this.dgvResults.Rows[filas].Cells[20].Value = actual.pista.colaEEV.Count;
+                    this.dgvResults.Rows[filas].Cells[21].Value = diferenteDeCero(actual.pista.tiempoRestanteAoD);
+                    this.dgvResults.Rows[filas].Cells[22].Value = truncar(actual.porcAvionesAyDInst);
+                    this.dgvResults.Rows[filas].Cells[23].Value = truncar(actual.maxEETTime);
+                    this.dgvResults.Rows[filas].Cells[24].Value = truncar(actual.avgEETTime);
+                    this.dgvResults.Rows[filas].Cells[25].Value = truncar(actual.maxEEVTime);
+                    this.dgvResults.Rows[filas].Cells[26].Value = truncar(actual.avgEEVTime);
                     
 
                     if(i == from)
@@ -206,20 +223,20 @@ namespace SistemasDinamicos
                     {
                         if (simulator.clientes[j].disabled)
                         {
-                            this.dgvResults.Rows[filas].Cells[23 + cont].Value = simulator.clientes[j].estado;
-                            this.dgvResults.Rows[filas].Cells[23 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+                            this.dgvResults.Rows[filas].Cells[27 + cont].Value = simulator.clientes[j].estado;
+                            this.dgvResults.Rows[filas].Cells[27 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
                         }
                         else
                         {
                             this.dgvResults.ColumnCount += 2;
 
-                            this.dgvResults.Columns[23 + cont].HeaderText = "Estado cliente " + simulator.clientes[j].id.ToString();
-                            this.dgvResults.Columns[23 + cont + 1].HeaderText = "T. permanencia " + simulator.clientes[j].id.ToString();
-                            this.dgvResults.Columns[23 + cont].SortMode = DataGridViewColumnSortMode.NotSortable;
-                            this.dgvResults.Columns[23 + cont + 1].SortMode = DataGridViewColumnSortMode.NotSortable;
+                            this.dgvResults.Columns[27 + cont].HeaderText = "Estado cliente " + simulator.clientes[j].id.ToString();
+                            this.dgvResults.Columns[27 + cont + 1].HeaderText = "T. permanencia " + simulator.clientes[j].id.ToString();
+                            this.dgvResults.Columns[27 + cont].SortMode = DataGridViewColumnSortMode.NotSortable;
+                            this.dgvResults.Columns[27 + cont + 1].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-                            this.dgvResults.Rows[filas].Cells[23 + cont].Value = simulator.clientes[j].estado;
-                            this.dgvResults.Rows[filas].Cells[23 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+                            this.dgvResults.Rows[filas].Cells[27 + cont].Value = simulator.clientes[j].estado;
+                            this.dgvResults.Rows[filas].Cells[27 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
 
                             simulator.clientes[j].disabled = true;
                         }
