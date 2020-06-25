@@ -125,7 +125,7 @@ namespace SimulacionMontecarlo
             switch (siguienteEvento.Key)
             {
                 case "tiempoProximaLlegada":
-                    actual = CrearStateRowLlegadaAvion(anterior, siguienteEvento.Value);
+                    actual = CrearStateRowLlegadaAvion(anterior, siguienteEvento.Value, i);
                     break;
                 case var val when new Regex(@"tiempoFinAterrizaje_*").IsMatch(val):
                     avion = Convert.ToInt32(siguienteEvento.Key.Split('_')[1]);
@@ -166,7 +166,7 @@ namespace SimulacionMontecarlo
             return menorTiempo;
         }
 
-        private int GetCantidadAvionesEnPermanencia(StateRow vector)
+        private int GetCantidadAvionesEnPermanencia()
         {
             int contador = 0;
             for (int i=0; i<this.clientes.Count; i++)
@@ -177,12 +177,53 @@ namespace SimulacionMontecarlo
             return contador;
         }
 
-        private StateRow CrearStateRowLlegadaAvion(StateRow anterior, double tiempoProximoEvento)
+        private StateRow CrearStateRowLlegadaAvion(StateRow anterior, double tiempoProximoEvento, int i)
         {
-            Avion.count += 1;
-            Avion avionNuevo = new Avion();
             StateRow nuevo = new StateRow();
 
+            // Controlamos que los aviones en tierra sean menores a 30, si lo son, pasamos al siguiente menor tiempo, es decir, el siguiente evento
+            int cantAvionesEnPermanencia = GetCantidadAvionesEnPermanencia();
+            if (anterior.pista.colaEET.Count + anterior.pista.colaEEV.Count + cantAvionesEnPermanencia >= 5)
+            {
+                nuevo = this.arrastrarVariablesEst(anterior);
+                nuevo.evento = "Rechazo avión";
+                nuevo.reloj = tiempoProximoEvento;
+
+                if (anterior.tiempoProximaLlegada != nuevo.reloj)
+                {
+                    nuevo.tiempoProximaLlegada = anterior.tiempoProximaLlegada;
+                }
+                else
+                {
+                    // Calcular siguiente tiempo de llegada de prox avion
+                    nuevo.rndLlegada = this.generator.NextRnd();
+                    nuevo.tiempoEntreLlegadas = this.exponentialGenerator.Generate(nuevo.rndLlegada);
+                    nuevo.tiempoProximaLlegada = nuevo.tiempoEntreLlegadas + nuevo.reloj;
+                }
+
+                // Arrastro todos los valores del vector de estado anterior
+                nuevo.pista = new Pista();
+                nuevo.pista.libre = anterior.pista.libre;
+                nuevo.pista.colaEET = new Queue<Avion>(anterior.pista.colaEET);
+                nuevo.pista.colaEEV = new Queue<Avion>(anterior.pista.colaEEV);
+
+                nuevo.tiempoFinAterrizaje = anterior.tiempoFinAterrizaje;
+
+                nuevo.tiempoFinDeDespegue = anterior.tiempoFinDeDespegue;
+
+                nuevo.tiempoFinPermanencia = anterior.tiempoFinPermanencia;
+
+                // Se recalculan variables estadísticas
+                nuevo.porcAvionesAyDInst = (Convert.ToDouble(nuevo.cantAvionesAyDInst) / Convert.ToDouble(this.clientes.Count)) * 100;
+                nuevo.avgEETTime = Convert.ToDouble(nuevo.acumEETTime) / Convert.ToDouble(this.clientes.Count);
+                nuevo.avgEEVTime = Convert.ToDouble(nuevo.acumEEVTime) / Convert.ToDouble(this.clientes.Count);
+
+                return nuevo;
+            }
+
+            Avion.count += 1;
+            Avion avionNuevo = new Avion();
+            
             nuevo = this.arrastrarVariablesEst(anterior);
             nuevo.evento = "Llegada Avion (" + Avion.count.ToString() + ")";
             nuevo.reloj = tiempoProximoEvento;
@@ -193,6 +234,7 @@ namespace SimulacionMontecarlo
             nuevo.rndLlegada = this.generator.NextRnd();
             nuevo.tiempoEntreLlegadas = this.exponentialGenerator.Generate(nuevo.rndLlegada);
             nuevo.tiempoProximaLlegada = nuevo.tiempoEntreLlegadas + nuevo.reloj;
+
 
             // Calcular variables de aterrizaje
             // Calculos variables de pista

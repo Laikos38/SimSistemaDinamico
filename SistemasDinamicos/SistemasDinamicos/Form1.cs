@@ -187,29 +187,6 @@ namespace SistemasDinamicos
                     int cont = 0;
                     for (int j = columnaInicial; j < simulator.clientes.Count; j++)
                     {
-                        #region para el drogui
-                        /*
-                        try
-                        {
-                            this.dgvResults.Rows[i].Cells[23 + j + clientesInsertados].Value = simulator.clientes[j].estado;
-                            this.dgvResults.Rows[i].Cells[23 + j + 1 + clientesInsertados].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
-                        }
-                        catch
-                        {
-                            this.dgvResults.ColumnCount += 2;
-
-                            this.dgvResults.Columns[23 + j + clientesInsertados].HeaderText = "Estado cliente " + simulator.clientes[j].id.ToString();
-                            this.dgvResults.Columns[23 + j + 1 + clientesInsertados].HeaderText = "T. permanencia " + simulator.clientes[j].id.ToString();
-                            this.dgvResults.Columns[23 + j + clientesInsertados].SortMode = DataGridViewColumnSortMode.NotSortable;
-                            this.dgvResults.Columns[23 + j + 1 + clientesInsertados].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                            this.dgvResults.Rows[i].Cells[23 + j + clientesInsertados].Value = simulator.clientes[j].estado;
-                            this.dgvResults.Rows[i].Cells[23 + j + 1 + clientesInsertados].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
-                        }
-                        clientesInsertados += 1;
-                        */
-                        #endregion para el drogui
-
                         if (simulator.clientes[j].disabled)
                         {
                             this.dgvResults.Rows[filas].Cells[23 + cont].Value = simulator.clientes[j].estado;
