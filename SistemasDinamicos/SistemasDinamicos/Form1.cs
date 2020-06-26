@@ -254,7 +254,7 @@ namespace SistemasDinamicos
                     this.dgvResults.Rows[filas].Cells[25].Value = truncar(actual.maxEEVTime);
                     this.dgvResults.Rows[filas].Cells[26].Value = truncar(actual.avgEEVTime);
                     
-                    if(i == from)
+                    if(i == from-1)
                     {
                         for (int j=0; j<simulator.clientes.Count; j++)
                         {
