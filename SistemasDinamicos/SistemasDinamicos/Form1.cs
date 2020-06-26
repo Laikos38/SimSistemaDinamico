@@ -70,107 +70,160 @@ namespace SistemasDinamicos
                 tiempoInestabilidad = tiempoInesI
             };
 
+            // Se imprimen por única vez las columnas fijas del vector de estado
+            #region columnas fijas
+            this.dgvResults.ColumnCount = 27;
 
-            /*
-            
-            */
+            this.dgvResults.Columns[0].HeaderText = "n°";
+            this.dgvResults.Columns[1].HeaderText = "Evento";
+            this.dgvResults.Columns[2].HeaderText = "Reloj";
+            this.dgvResults.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            this.dgvResults.Columns[3].HeaderText = "RND";
+            this.dgvResults.Columns[4].HeaderText = "T. entre llegadas";
+            this.dgvResults.Columns[5].HeaderText = "T. prox. llegada";
+            this.dgvResults.Columns[3].DefaultCellStyle.BackColor = Color.LightSkyBlue;
+            this.dgvResults.Columns[4].DefaultCellStyle.BackColor = Color.LightSkyBlue;
+            this.dgvResults.Columns[5].DefaultCellStyle.BackColor = Color.LightSkyBlue;
+            this.dgvResults.Columns[3].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[4].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[5].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            this.dgvResults.Columns[6].HeaderText = "RND";
+            this.dgvResults.Columns[7].HeaderText = "T. aterrizaje";
+            this.dgvResults.Columns[8].HeaderText = "T. fin aterrizaje";
+            this.dgvResults.Columns[6].DefaultCellStyle.BackColor = Color.LightPink;
+            this.dgvResults.Columns[7].DefaultCellStyle.BackColor = Color.LightPink;
+            this.dgvResults.Columns[8].DefaultCellStyle.BackColor = Color.LightPink;
+            this.dgvResults.Columns[6].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[7].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[8].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            this.dgvResults.Columns[9].HeaderText = "SUM RND";
+            this.dgvResults.Columns[10].HeaderText = "T. permanencia";
+            this.dgvResults.Columns[11].HeaderText = "T. fin permanencia";
+            this.dgvResults.Columns[9].DefaultCellStyle.BackColor = Color.Turquoise;
+            this.dgvResults.Columns[10].DefaultCellStyle.BackColor = Color.Turquoise;
+            this.dgvResults.Columns[11].DefaultCellStyle.BackColor = Color.Turquoise;
+            this.dgvResults.Columns[9].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[10].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[11].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            this.dgvResults.Columns[12].HeaderText = "RND";
+            this.dgvResults.Columns[13].HeaderText = "T. despegue";
+            this.dgvResults.Columns[14].HeaderText = "T. fin despegue";
+            this.dgvResults.Columns[12].DefaultCellStyle.BackColor = Color.SandyBrown;
+            this.dgvResults.Columns[13].DefaultCellStyle.BackColor = Color.SandyBrown;
+            this.dgvResults.Columns[14].DefaultCellStyle.BackColor = Color.SandyBrown;
+            this.dgvResults.Columns[12].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[13].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[14].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            this.dgvResults.Columns[15].HeaderText = "RND";
+            this.dgvResults.Columns[16].HeaderText = "T. sig. interrupción";
+            this.dgvResults.Columns[17].HeaderText = "T. fin purga";
+            this.dgvResults.Columns[15].DefaultCellStyle.BackColor = Color.LightGreen;
+            this.dgvResults.Columns[16].DefaultCellStyle.BackColor = Color.LightGreen;
+            this.dgvResults.Columns[17].DefaultCellStyle.BackColor = Color.LightGreen;
+            this.dgvResults.Columns[15].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[16].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[17].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            this.dgvResults.Columns[18].HeaderText = "Estado pista";
+            this.dgvResults.Columns[19].HeaderText = "Cola EET";
+            this.dgvResults.Columns[20].HeaderText = "Cola EEV";
+            this.dgvResults.Columns[21].HeaderText = "T. restante suspensión";
+            this.dgvResults.Columns[18].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[19].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[20].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[21].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+
+            this.dgvResults.Columns[22].HeaderText = "% aviones sin espera";
+            this.dgvResults.Columns[23].HeaderText = "Máx. T. EET";
+            this.dgvResults.Columns[24].HeaderText = "Prom. T. EET";
+            this.dgvResults.Columns[25].HeaderText = "Máx. T. EEV";
+            this.dgvResults.Columns[26].HeaderText = "Prom. T. EEV";
+            this.dgvResults.Columns[22].DefaultCellStyle.BackColor = Color.MediumAquamarine;
+            this.dgvResults.Columns[23].DefaultCellStyle.BackColor = Color.DarkSalmon;
+            this.dgvResults.Columns[24].DefaultCellStyle.BackColor = Color.DarkSalmon;
+            this.dgvResults.Columns[25].DefaultCellStyle.BackColor = Color.LightSteelBlue;
+            this.dgvResults.Columns[26].DefaultCellStyle.BackColor = Color.LightSteelBlue;
+            this.dgvResults.Columns[22].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[23].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[24].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[25].SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.dgvResults.Columns[26].SortMode = DataGridViewColumnSortMode.NotSortable;
+            #endregion columnas fijas
+
+            if (from == 0)
+            {
+                this.dgvResults.Rows.Add();
+                this.dgvResults.Rows[0].Cells[0].Value = anterior.iterationNum;
+                this.dgvResults.Rows[0].Cells[1].Value = anterior.evento;
+                this.dgvResults.Rows[0].Cells[2].Value = truncar(anterior.reloj);
+                this.dgvResults.Rows[0].Cells[3].Value = diferenteDeCero(anterior.rndLlegada);
+                this.dgvResults.Rows[0].Cells[4].Value = diferenteDeCero(anterior.tiempoEntreLlegadas);
+                this.dgvResults.Rows[0].Cells[5].Value = diferenteDeCero(anterior.tiempoProximaLlegada);
+                this.dgvResults.Rows[0].Cells[6].Value = diferenteDeCero(anterior.rndAterrizaje);
+                this.dgvResults.Rows[0].Cells[7].Value = diferenteDeCero(anterior.tiempoAterrizaje);
+                this.dgvResults.Rows[0].Cells[8].Value = diferenteDeCero(anterior.tiempoFinAterrizaje);
+                this.dgvResults.Rows[0].Cells[9].Value = diferenteDeCero(anterior.rndPermanencia);
+                this.dgvResults.Rows[0].Cells[10].Value = diferenteDeCero(anterior.tiempoDePermanencia);
+                this.dgvResults.Rows[0].Cells[11].Value = diferenteDeCero(anterior.tiempoFinPermanencia);
+                this.dgvResults.Rows[0].Cells[12].Value = diferenteDeCero(anterior.rndDespegue);
+                this.dgvResults.Rows[0].Cells[13].Value = diferenteDeCero(anterior.tiempoDeDespegue);
+                this.dgvResults.Rows[0].Cells[14].Value = diferenteDeCero(anterior.tiempoFinDeDespegue);
+                this.dgvResults.Rows[0].Cells[15].Value = diferenteDeCero(anterior.rndInestable);
+                this.dgvResults.Rows[0].Cells[16].Value = diferenteDeCero(anterior.tiempoInestabilidad);
+                this.dgvResults.Rows[0].Cells[17].Value = diferenteDeCero(anterior.tiempoFinPurga);
+                this.dgvResults.Rows[0].Cells[18].Value = anterior.pista.state;
+                this.dgvResults.Rows[0].Cells[19].Value = anterior.pista.colaEET.Count;
+                this.dgvResults.Rows[0].Cells[20].Value = anterior.pista.colaEEV.Count;
+                this.dgvResults.Rows[0].Cells[21].Value = diferenteDeCero(anterior.pista.tiempoRestanteAoD);
+                this.dgvResults.Rows[0].Cells[22].Value = truncar(anterior.porcAvionesAyDInst);
+                this.dgvResults.Rows[0].Cells[23].Value = truncar(anterior.maxEETTime);
+                this.dgvResults.Rows[0].Cells[24].Value = truncar(anterior.avgEETTime);
+                this.dgvResults.Rows[0].Cells[25].Value = truncar(anterior.maxEEVTime);
+                this.dgvResults.Rows[0].Cells[26].Value = truncar(anterior.avgEEVTime);
+
+                int cont = 0;
+                for (int j = 0; j < simulator.clientes.Count; j++)
+                {
+                    if (simulator.clientes[j].disabled)
+                    {
+                        this.dgvResults.Rows[0].Cells[27 + cont].Value = simulator.clientes[j].estado;
+                        this.dgvResults.Rows[0].Cells[27 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+                    }
+                    else
+                    {
+                        this.dgvResults.ColumnCount += 2;
+
+                        this.dgvResults.Columns[27 + cont].HeaderText = "Estado cliente " + simulator.clientes[j].id.ToString();
+                        this.dgvResults.Columns[27 + cont + 1].HeaderText = "T. permanencia " + simulator.clientes[j].id.ToString();
+                        this.dgvResults.Columns[27 + cont].SortMode = DataGridViewColumnSortMode.NotSortable;
+                        this.dgvResults.Columns[27 + cont + 1].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                        this.dgvResults.Rows[0].Cells[27 + cont].Value = simulator.clientes[j].estado;
+                        this.dgvResults.Rows[0].Cells[27 + cont + 1].Value = diferenteDeCero(simulator.clientes[j].tiempoPermanencia);
+
+                        simulator.clientes[j].disabled = true;
+                    }
+                    cont += 2;
+                }
+            }
 
             int filas = 0;
+            if (from == 0)
+                filas = 1;
             var columnaInicial = 0;
             for (int i = 0; i < quantity; i++)
             {
                 StateRow actual = simulator.NextStateRow(anterior, i);
 
-                if (i == 0)
-                {
-                    this.dgvResults.ColumnCount = 27;
-
-                    this.dgvResults.Columns[0].HeaderText = "n°";
-                    this.dgvResults.Columns[1].HeaderText = "Evento";
-                    this.dgvResults.Columns[2].HeaderText = "Reloj";
-                    this.dgvResults.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                    this.dgvResults.Columns[3].HeaderText = "RND";
-                    this.dgvResults.Columns[4].HeaderText = "T. entre llegadas";
-                    this.dgvResults.Columns[5].HeaderText = "T. prox. llegada";
-                    this.dgvResults.Columns[3].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-                    this.dgvResults.Columns[4].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-                    this.dgvResults.Columns[5].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-                    this.dgvResults.Columns[3].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[4].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[5].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                    this.dgvResults.Columns[6].HeaderText = "RND";
-                    this.dgvResults.Columns[7].HeaderText = "T. aterrizaje";
-                    this.dgvResults.Columns[8].HeaderText = "T. fin aterrizaje";
-                    this.dgvResults.Columns[6].DefaultCellStyle.BackColor = Color.LightPink;
-                    this.dgvResults.Columns[7].DefaultCellStyle.BackColor = Color.LightPink;
-                    this.dgvResults.Columns[8].DefaultCellStyle.BackColor = Color.LightPink;
-                    this.dgvResults.Columns[6].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[7].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[8].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                    this.dgvResults.Columns[9].HeaderText = "SUM RND";
-                    this.dgvResults.Columns[10].HeaderText = "T. permanencia";
-                    this.dgvResults.Columns[11].HeaderText = "T. fin permanencia";
-                    this.dgvResults.Columns[9].DefaultCellStyle.BackColor = Color.Turquoise;
-                    this.dgvResults.Columns[10].DefaultCellStyle.BackColor = Color.Turquoise;
-                    this.dgvResults.Columns[11].DefaultCellStyle.BackColor = Color.Turquoise;
-                    this.dgvResults.Columns[9].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[10].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[11].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                    this.dgvResults.Columns[12].HeaderText = "RND";
-                    this.dgvResults.Columns[13].HeaderText = "T. despegue";
-                    this.dgvResults.Columns[14].HeaderText = "T. fin despegue";
-                    this.dgvResults.Columns[12].DefaultCellStyle.BackColor = Color.SandyBrown;
-                    this.dgvResults.Columns[13].DefaultCellStyle.BackColor = Color.SandyBrown;
-                    this.dgvResults.Columns[14].DefaultCellStyle.BackColor = Color.SandyBrown;
-                    this.dgvResults.Columns[12].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[13].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[14].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                    this.dgvResults.Columns[15].HeaderText = "RND";
-                    this.dgvResults.Columns[16].HeaderText = "T. sig. interrupción";
-                    this.dgvResults.Columns[17].HeaderText = "T. fin purga";
-                    this.dgvResults.Columns[15].DefaultCellStyle.BackColor = Color.LightGreen;
-                    this.dgvResults.Columns[16].DefaultCellStyle.BackColor = Color.LightGreen;
-                    this.dgvResults.Columns[17].DefaultCellStyle.BackColor = Color.LightGreen;
-                    this.dgvResults.Columns[15].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[16].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[17].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                    this.dgvResults.Columns[18].HeaderText = "Estado pista";
-                    this.dgvResults.Columns[19].HeaderText = "Cola EET";
-                    this.dgvResults.Columns[20].HeaderText = "Cola EEV";
-                    this.dgvResults.Columns[21].HeaderText = "T. restante suspensión";
-                    this.dgvResults.Columns[18].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[19].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[20].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[21].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-
-                    this.dgvResults.Columns[22].HeaderText = "% aviones sin espera";
-                    this.dgvResults.Columns[23].HeaderText = "Máx. T. EET";
-                    this.dgvResults.Columns[24].HeaderText = "Prom. T. EET";
-                    this.dgvResults.Columns[25].HeaderText = "Máx. T. EEV";
-                    this.dgvResults.Columns[26].HeaderText = "Prom. T. EEV";
-                    this.dgvResults.Columns[22].DefaultCellStyle.BackColor = Color.MediumAquamarine;
-                    this.dgvResults.Columns[23].DefaultCellStyle.BackColor = Color.DarkSalmon;
-                    this.dgvResults.Columns[24].DefaultCellStyle.BackColor = Color.DarkSalmon;
-                    this.dgvResults.Columns[25].DefaultCellStyle.BackColor = Color.LightSteelBlue;
-                    this.dgvResults.Columns[26].DefaultCellStyle.BackColor = Color.LightSteelBlue;
-                    this.dgvResults.Columns[22].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[23].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[24].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[25].SortMode = DataGridViewColumnSortMode.NotSortable;
-                    this.dgvResults.Columns[26].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                }
-
-                if (i >= from && i< to)
+                if (i >= from-1 && i < to)
                 {
                     this.dgvResults.Rows.Add();
                     this.dgvResults.Rows[filas].Cells[0].Value = actual.iterationNum;
@@ -201,7 +254,6 @@ namespace SistemasDinamicos
                     this.dgvResults.Rows[filas].Cells[25].Value = truncar(actual.maxEEVTime);
                     this.dgvResults.Rows[filas].Cells[26].Value = truncar(actual.avgEEVTime);
                     
-
                     if(i == from)
                     {
                         for (int j=0; j<simulator.clientes.Count; j++)
@@ -242,6 +294,7 @@ namespace SistemasDinamicos
                     filas += 1;
                 }
 
+                // Muestro estadísticas
                 if (i == quantity - 1)
                 {
                     this.txtMaxTimeEET.Text = truncar(actual.maxEETTime).ToString();
