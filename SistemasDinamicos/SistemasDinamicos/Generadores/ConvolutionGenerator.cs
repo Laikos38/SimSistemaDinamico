@@ -17,13 +17,18 @@ namespace RandomVarGenerator
         
         public double Generate(out double ac)
         {
+            double rnd = -1.0;
             ac = 0;
-            for (int i = 0; i < 12; i++)
-            {
-                ac += congruentialGenerator.NextRnd();
-            }
-            double rnd = (ac - 6) * this.stDeviation + this.mean;
 
+            while(rnd < 0)
+            {
+                ac = 0;
+                for (int i = 0; i < 12; i++)
+                {
+                    ac += congruentialGenerator.NextRnd();
+                }
+                rnd = (ac - 6) * this.stDeviation + this.mean;
+            }
 
             return rnd;
         }
